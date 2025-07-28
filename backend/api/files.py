@@ -16,6 +16,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from training.fine_tune import fine_tune
 from utils.file_parser import parse_file, clean_json
 from utils.email_notify import send_upload_notification
+from utils.zsc_tm import classify_documents
 
 router = APIRouter()
 
@@ -77,45 +78,52 @@ async def upload_file(
         raise HTTPException(status_code=500, detail=f"❌ Failed to parse file: {str(e)}")
 
     # ─── Embedding and Save ───
-    try:
-        full_text = parse_file(file_path)
-        if isinstance(full_text, list):
-            full_text = " ".join(
-                str(item.get("prompt", "")) + " " + str(item.get("response", ""))
-                for item in full_text if isinstance(item, dict)
-            )
-        elif isinstance(full_text, dict):
-            full_text = " ".join(str(v) for v in full_text.values())
-        elif not isinstance(full_text, str):
-            full_text = str(full_text)
+    match_result = classify_documents()
+    if (match_result == -1):
+        print("You have provided wrong info we cannot train your model")
 
-        chunks = chunk_text(full_text)
-        save_embeddings(file_id=file.filename, chunks=chunks)
-    except Exception as e:
-        print(f"[Embedding Error]: {e}")
+    else:
+        try:
+            full_text = parse_file(file_path)
+            if isinstance(full_text, list):
+                full_text = " ".join(
+                    str(item.get("prompt", "")) + " " + str(item.get("response", ""))
+                    for item in full_text if isinstance(item, dict)
+            )
+            elif isinstance(full_text, dict):
+                full_text = " ".join(str(v) for v in full_text.values())
+
+            elif not isinstance(full_text, str):
+                full_text = str(full_text)
+
+            chunks = chunk_text(full_text)
+            save_embeddings(file_id=file.filename, chunks=chunks)
+
+        except Exception as e:
+            print(f"[Embedding Error]: {e}")
 
     # ─── Update user's file_id in DB ───
-    try:
-        result = await db.execute(select(User).where(User.email == user_email))
-        user = result.scalar_one_or_none()
-        if user:
-            user.file_id = file.filename  # Store filename as file_id
-            await db.commit()
-        else:
-            raise HTTPException(status_code=404, detail="User not found")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"❌ Failed to update user with file_id: {str(e)}")
+        try:
+            result = await db.execute(select(User).where(User.email == user_email))
+            user = result.scalar_one_or_none()
+            if user:
+                user.file_id = file.filename  # Store filename as file_id
+                await db.commit()
+            else:
+                raise HTTPException(status_code=404, detail="User not found")
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"❌ Failed to update user with file_id: {str(e)}")
 
     # ─── Optional: Background fine-tune ───
     # background_tasks.add_task(fine_tune)
 
     # ─── Email Notification ───
-    send_upload_notification("vastavshivam@gmai.com", "uploaded successfully.", body="File uploaded ...")
+        send_upload_notification("vastavshivam@gmail.com", "uploaded successfully.", body="File uploaded ...")
 
     # ─── Return Response ───
-    return JSONResponse(content={
-        "message": f"✅ File {file.filename} uploaded successfully.",
-        "filename": file.filename,
-        "preview": preview,
-        "uploaded_by": user_email
-    })
+        return JSONResponse(content={
+            "message": f"✅ File {file.filename} uploaded successfully.",
+            "filename": file.filename,
+            "preview": preview,
+            "uploaded_by": user_email
+        })

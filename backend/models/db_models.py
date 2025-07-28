@@ -102,3 +102,10 @@ class ChatHistory(Base):
     message_type = Column(String, default="text")  # Optional: 'text', 'image', etc.
     direction = Column(String, nullable=False)  # 'incoming' or 'outgoing'
     timestamp = Column(DateTime(timezone=True), server_default=func.now())
+
+class ClassifyLabels(Base):
+    __tablename__ = "classify_labels"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, index=True)
+    label = Column(Text)
