@@ -1,3 +1,4 @@
+from requests import Session
 from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Depends, Query
 from fastapi.responses import JSONResponse
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
@@ -36,7 +37,7 @@ async def upload_file(
     file: UploadFile = File(...),
     credentials: HTTPAuthorizationCredentials = Depends(auth_scheme),
     refresh_token: str = Query(None),
-    db: AsyncSession = Depends(get_db)
+    db: Session = Depends(get_db)
 ):
     # ─── JWT Decode ───
     try:
@@ -80,33 +81,35 @@ async def upload_file(
         raise HTTPException(status_code=500, detail=f"❌ Failed to parse file: {str(e)}")
 
     # ─── Embedding and Save ───
-    match_result = await classify_documents()  # Pass file_path to the function
+    match_result = await classify_documents(db)  # Pass file_path to the function
+    print(f"Match Result: {match_result}")
     if match_result == '-1':
         raise HTTPException(status_code=400, detail="❌ Incorrect information provided. Cannot train model.")
     
-    try:
-        full_text = parse_file(file_path)
-        if isinstance(full_text, list):
-            full_text = " ".join(
-                str(item.get("prompt", "")) + " " + str(item.get("response", ""))
-                for item in full_text if isinstance(item, dict)
-            )
-        elif isinstance(full_text, dict):
-            full_text = " ".join(str(v) for v in full_text.values())
+    else:
+        try:
+            print("You have provided correct info about the file. Proceeding with embedding generation...")
+            full_text = parse_file(file_path)
+            if isinstance(full_text, list):
+                full_text = " ".join(
+                    str(item.get("prompt", "")) + " " + str(item.get("response", ""))
+                    for item in full_text if isinstance(item, dict)
+                )
+            elif isinstance(full_text, dict):
+                full_text = " ".join(str(v) for v in full_text.values())
 
-        elif not isinstance(full_text, str):
-            full_text = str(full_text)
+            elif not isinstance(full_text, str):
+                full_text = str(full_text)
 
-        # ─── Chunk and Save Embeddings ───
-        chunks = chunk_text(full_text)
-        if chunks:
-            save_embeddings(file_id=file.filename, chunks=chunks)
-        else:
-            raise HTTPException(status_code=500, detail="❌ No valid chunks generated.")
-
-    except Exception as e:
-        print(f"[Embedding Error]: {e}")
-        raise HTTPException(status_code=500, detail=f"❌ Embedding generation failed: {str(e)}")
+            # ─── Chunk and Save Embeddings ───
+            chunks = chunk_text(full_text)
+            if chunks:
+                save_embeddings(file_id=file.filename, chunks=chunks)
+            else:
+                raise HTTPException(status_code=500, detail="❌ No valid chunks generated.")
+        except Exception as e:
+            print(f"[Embedding Error]: {e}")
+            raise HTTPException(status_code=500, detail=f"❌ Embedding generation failed: {str(e)}")
 
     # ─── Update user's file_id in DB ───
     try:
@@ -131,5 +134,6 @@ async def upload_file(
         "message": f"✅ File {file.filename} uploaded successfully.",
         "filename": file.filename,
         "preview": preview,
-        "uploaded_by": user_email
+        "uploaded_by": user_email,
+        "label": match_result
     })
