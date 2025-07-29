@@ -1,31 +1,34 @@
-/* Register.css */
+/* Register.css - Light Theme */
 
 .login-cover {
   display: flex;
   height: 100vh;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
   font-family: 'Segoe UI', sans-serif;
-  color: white;
+  color: #334155;
 }
 
 .login-left-panel {
   flex: 1;
-  background: rgba(0, 0, 0, 0.3);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 40%, #e2e8f0 100%);
   padding: 60px 40px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   gap: 20px;
+  border-right: 1px solid #e2e8f0;
 }
 
 .brand-name {
-  font-size: 36px;
-  font-weight: 700;
+  font-size: 20px;
+  font-weight: 500;
+  color: #64748b;
 }
 
 .brand-tagline {
-  font-size: 16px;
-  color: #d0d0d0;
+  font-size: 12px;
+  color: #64748b;
+  opacity: 0.8;
 }
 
 .login-benefits {
@@ -39,6 +42,7 @@
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #475569;
 }
 
 .login-right-panel {
@@ -46,44 +50,62 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  background: #ffffff;
 }
 
 .login-card {
-  background: rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.95);
   padding: 40px;
   border-radius: 16px;
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+  box-shadow: 0 8px 30px rgba(100, 116, 139, 0.1);
   backdrop-filter: blur(12px);
   width: 100%;
   max-width: none;
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
 .login-logo {
   display: flex;
   justify-content: center;
-  margin-bottom: 20px;
+  margin-bottom: 40px;
+}
+
+.logo-image {
+  height: 180px;
+  width: auto;
+  max-width: 350px;
+  object-fit: contain;
+  border-radius: 16px;
+  transition: transform 0.2s ease;
+  background: transparent;
+}
+
+.logo-image:hover {
+  transform: scale(1.05);
 }
 
 .login-title {
   text-align: center;
   font-size: 22px;
-  color: #1DA1F2;
+  color: #1e293b;
+  font-weight: 600;
 }
 
 .login-subtext {
   text-align: center;
   font-size: 14px;
-  color: #ccc;
+  color: #64748b;
   margin-bottom: 24px;
 }
 
 .login-error {
-  background: #ff4d4f;
-  color: white;
+  background: #fee2e2;
+  color: #dc2626;
   padding: 10px;
   border-radius: 6px;
   margin-bottom: 16px;
   text-align: center;
+  border: 1px solid #fecaca;
 }
 
 .login-form-group {
@@ -94,19 +116,28 @@
   display: block;
   margin-bottom: 6px;
   font-weight: 500;
+  color: #374151;
 }
 
 .input-icon-wrapper {
   display: flex;
   align-items: center;
-  background-color: #e6f0ff;
+  background-color: #f8fafc;
   border-radius: 6px;
   padding: 8px 12px;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.input-icon-wrapper:focus-within {
+  border-color: #6366f1;
+  background-color: #ffffff;
+  box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
 }
 
 .input-icon-wrapper .icon {
   margin-right: 10px;
-  color: #1DA1F2;
+  color: #6366f1;
 }
 
 .input-icon-wrapper input {
@@ -115,36 +146,90 @@
   background: transparent;
   flex: 1;
   font-size: 14px;
+  color: #374151;
+}
+
+.input-icon-wrapper input::placeholder {
+  color: #9ca3af;
 }
 
 .login-btn {
   width: 100%;
   padding: 12px;
-  background-color: #1DA1F2;
+  background-color: #6366f1;
   color: white;
   border: none;
   border-radius: 8px;
   font-weight: 600;
   font-size: 16px;
   cursor: pointer;
-  transition: background 0.3s ease;
+  transition: all 0.3s ease;
 }
 
 .login-btn:hover {
-  background-color: #0d8ae2;
+  background-color: #5b21b6;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
+.login-btn:disabled {
+  background-color: #e5e7eb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
 }
 
 .login-footer {
   margin-top: 20px;
   text-align: center;
   font-size: 14px;
+  color: #64748b;
 }
 
 .login-footer a {
-  color: #1DA1F2;
+  color: #6366f1;
   text-decoration: none;
+  font-weight: 500;
+}
+
+.login-footer a:hover {
+  color: #5b21b6;
+  text-decoration: underline;
 }
 
 .login-footer a:hover {
   text-decoration: underline;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .login-cover {
+    flex-direction: column;
+  }
+  
+  .login-left-panel {
+    padding: 30px 20px;
+    min-height: auto;
+  }
+  
+  .logo-image {
+    height: 120px;
+    max-width: 250px;
+  }
+  
+  .brand-name {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .logo-image {
+    height: 100px;
+    max-width: 220px;
+  }
+  
+  .brand-name {
+    font-size: 16px;
+  }
 }

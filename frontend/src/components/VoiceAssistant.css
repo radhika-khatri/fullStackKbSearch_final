@@ -1,0 +1,230 @@
+/* Voice Assistant Styles */
+.voice-assistant {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.voice-assistant-unsupported {
+  display: flex;
+  align-items: center;
+}
+
+.voice-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 18px;
+  color: white;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.voice-btn:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.voice-btn:active {
+  transform: scale(0.95);
+}
+
+.voice-btn-active {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+  animation: voicePulse 1.5s infinite;
+  box-shadow: 0 4px 20px rgba(255, 107, 107, 0.5);
+}
+
+.voice-btn-disabled {
+  background: #ccc;
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+.voice-btn-disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+.voice-recording {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.voice-pulse {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  animation: voiceRipple 1s infinite;
+}
+
+.voice-loading {
+  animation: spin 1s linear infinite;
+}
+
+.voice-status {
+  position: absolute;
+  bottom: -60px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(0, 0, 0, 0.9);
+  color: white;
+  padding: 8px 12px;
+  border-radius: 8px;
+  min-width: 200px;
+  max-width: 300px;
+  text-align: center;
+  font-size: 12px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.voice-status::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-bottom: 6px solid rgba(0, 0, 0, 0.9);
+}
+
+.voice-transcript {
+  font-weight: 500;
+  margin-bottom: 4px;
+  word-break: break-word;
+}
+
+.voice-confidence {
+  font-size: 10px;
+  opacity: 0.7;
+}
+
+/* Animations */
+@keyframes voicePulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+@keyframes voiceRipple {
+  0% {
+    transform: scale(0);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(2);
+    opacity: 0;
+  }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .voice-btn {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+  
+  .voice-status {
+    min-width: 150px;
+    max-width: 250px;
+    font-size: 11px;
+    bottom: -55px;
+  }
+}
+
+/* Integration with chat input */
+.chat-input .voice-assistant {
+  margin-right: 8px;
+}
+
+.chat-widget-input .voice-assistant {
+  margin-right: 8px;
+}
+
+/* Voice status in chat widget */
+.chat-widget-modal .voice-status {
+  bottom: -50px;
+  font-size: 11px;
+  min-width: 150px;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .voice-status {
+    background: rgba(255, 255, 255, 0.9);
+    color: #333;
+  }
+  
+  .voice-status::before {
+    border-bottom-color: rgba(255, 255, 255, 0.9);
+  }
+}
+
+/* Permission-related styles */
+.voice-btn-permission {
+  background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+  box-shadow: 0 4px 12px rgba(243, 156, 18, 0.3);
+}
+
+.voice-btn-permission:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f1c40f 0%, #f39c12 100%);
+  box-shadow: 0 6px 20px rgba(243, 156, 18, 0.4);
+}
+
+.voice-permission-text {
+  font-size: 12px;
+  color: #666;
+  text-align: center;
+  margin-top: 5px;
+  white-space: nowrap;
+}
+
+.voice-requesting {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Improved error states */
+.voice-error {
+  color: #e74c3c;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
+}
+
+.voice-success {
+  color: #27ae60;
+  font-size: 12px;
+  margin-top: 5px;
+  text-align: center;
+}

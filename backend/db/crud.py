@@ -72,8 +72,8 @@ def delete_ticket(db: Session, ticket_id: int):
     return ticket
 
 # 👍👎 Save Feedback
-def save_feedback(message_id: str, feedback: str):
-    return save_feedback_mongo(message_id, feedback)
+def save_feedback(message_id: str, feedback: str, session_id: str = None, comment: str = None):
+    return save_feedback_mongo(message_id, feedback, session_id, comment)
 
 #  Get Feedback by Chat ID
 def get_feedback_for_chat(db: Session, chat_id: int):

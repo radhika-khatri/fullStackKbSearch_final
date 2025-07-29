@@ -29,11 +29,11 @@ logging.basicConfig(level=logging.INFO)
 log = logging.getLogger(__name__)
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-MODEL_DIR = os.path.abspath("../vector_stores")  # Local model directory
-DATA_FILE = os.path.abspath("/data/test.json")               # Your JSONL file
+MODEL_DIR = os.path.abspath("../vector_stores/falcon-rw-1b")  # Local model directory
+DATA_FILE = os.path.abspath("/data/fine_tune.jsonl")               # Your JSONL file
 # OUTPUT_DIR = os.path.abspath("../fine_tuned/falcon-rw-1b")
 MODEL_NAME = os.getenv("MODEL_NAME", "tiiuae/falcon-rw-1b")
-DATA_PATH = os.path.abspath("data/test.json")
+DATA_PATH = os.path.abspath("data/tune.jsonl")
 OUTPUT_DIR = os.path.abspath(os.path.join(BASE_DIR ,"../checkpoints/fine-tuned-output"))
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379") #not tested 
 JWT_SECRET = os.getenv("JWT_SECRET", "your-secret-key")

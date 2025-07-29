@@ -3,21 +3,54 @@ from datetime import datetime
 import os
 import redis
 import json
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 # LangChain imports
 from langchain.memory import RedisChatMessageHistory, ConversationBufferMemory
 
+# SQLite fallback import
+try:
+    from sqlite_fallback import save_feedback_sqlite, get_feedback_analytics_sqlite, save_chat_log_sqlite
+    SQLITE_AVAILABLE = True
+except ImportError:
+    print("SQLite fallback not available")
+    SQLITE_AVAILABLE = False
+
 # MongoDB setup
-# MongoDB setup (Local)
-MONGO_URI = os.getenv("MONGO_URI", "mongodb://localhost:27017/")
-mongo_client = MongoClient(MONGO_URI)
+MONGO_URI = os.getenv("MONGO_URI", "mongodb+srv://AppGallop:appgallop123@cluster0.tpatz5r.mongodb.net/")
+print(f"Connecting to MongoDB with URI: {MONGO_URI[:50]}...")  # Log partial URI for debugging
 
-mongo_db = mongo_client["chat_support"]
+MONGODB_AVAILABLE = False
 
-# Collections
-chat_logs_col = mongo_db["chat_logs"]
-ticket_logs_col = mongo_db["ticket_logs"]
-feedback_logs_col = mongo_db["feedback_logs"]
+try:
+    mongo_client = MongoClient(MONGO_URI, serverSelectionTimeoutMS=5000)
+    # Test the connection
+    mongo_client.admin.command('ping')
+    print("✅ MongoDB connection successful!")
+    
+    mongo_db = mongo_client["chat_support"]
+    
+    # Collections
+    chat_logs_col = mongo_db["chat_logs"]
+    ticket_logs_col = mongo_db["ticket_logs"]
+    feedback_logs_col = mongo_db["feedback_logs"]
+    
+    MONGODB_AVAILABLE = True
+    
+except Exception as e:
+    print(f"❌ MongoDB connection failed: {e}")
+    if SQLITE_AVAILABLE:
+        print("🔄 Falling back to SQLite database...")
+    
+    # Create dummy collections to prevent import errors
+    mongo_client = None
+    mongo_db = None
+    chat_logs_col = None
+    ticket_logs_col = None
+    feedback_logs_col = None
 
 # Redis setup (plain Redis)
 redis_client = redis.Redis(host="localhost", port=6379, db=0)
@@ -64,15 +97,33 @@ def save_ticket_log_mongo(ticket_data):
     })
 
 
-def save_feedback_mongo(message_id, feedback):
+def save_feedback_mongo(message_id, feedback, session_id=None, comment=None):
     """
     Save thumbs up/down feedback.
+    Uses MongoDB if available, otherwise falls back to SQLite.
     """
-    feedback_logs_col.insert_one({
-        "message_id": message_id,
-        "feedback": feedback,  # 'up' or 'down'
-        "timestamp": datetime.utcnow()
-    })
+    if MONGODB_AVAILABLE and feedback_logs_col is not None:
+        try:
+            result = feedback_logs_col.insert_one({
+                "message_id": message_id,
+                "feedback": feedback,  # 'up' or 'down'
+                "session_id": session_id,
+                "comment": comment,
+                "timestamp": datetime.utcnow()
+            })
+            print(f"✅ Feedback saved to MongoDB: {message_id} - {feedback}")
+            return result
+        except Exception as e:
+            print(f"❌ Failed to save feedback to MongoDB: {e}")
+            if SQLITE_AVAILABLE:
+                print("🔄 Falling back to SQLite...")
+                return save_feedback_sqlite(message_id, feedback, session_id, comment)
+            raise e
+    elif SQLITE_AVAILABLE:
+        print(f"📝 Using SQLite for feedback: {message_id} - {feedback}")
+        return save_feedback_sqlite(message_id, feedback, session_id, comment)
+    else:
+        raise Exception("Neither MongoDB nor SQLite is available for feedback storage")
 
 
 def get_session_context(session_id):

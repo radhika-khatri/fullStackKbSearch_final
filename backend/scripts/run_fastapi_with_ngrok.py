@@ -4,7 +4,7 @@ import requests
 import re
 
 # === CONFIG ===
-PORT = 8080  # Your FastAPI port
+PORT = 8000  # Your FastAPI port
 UVICORN_CMD = f"uvicorn main:app --reload --port {PORT}"  # Change `main:app` to your FastAPI entrypoint
 ngrok_path = "./frontend/node_modules/.bin/ngrok"
 def start_fastapi():

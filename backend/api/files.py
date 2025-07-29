@@ -1,3 +1,10 @@
+# ==========================================
+# 💡 Support Assistant Project .gitignore
+# For FastAPI + PostgreSQL + React + Docker
+# Author: Shivam Srivastav
+# ==========================================
+# File: backend/api/files.py    
+# ==========================================
 from requests import Session
 from fastapi import APIRouter, UploadFile, File, HTTPException, BackgroundTasks, Depends, Query
 from fastapi.responses import JSONResponse
@@ -15,9 +22,12 @@ from models.db_models import User
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from training.fine_tune import fine_tune
-from utils.file_parser import parse_file, clean_json
+from utils.file_parser import parse_file, clean_json, extract_full_text
 from utils.email_notify import send_upload_notification
 from utils.zsc_tm import classify_documents
+from logging import getLogger
+
+logger = getLogger(__name__)
 
 router = APIRouter()
 
@@ -25,7 +35,7 @@ UPLOAD_DIR = Path("uploads")
 UPLOAD_DIR.mkdir(exist_ok=True)
 
 auth_scheme = HTTPBearer()
-REFRESH_URL = "http://localhost:8000/auth/refresh"
+REFR_URL = "http://localhost:8000/auth/refresh"
 
 ALLOWED_EXTENSIONS = {".csv", ".json", ".xlsx", ".txt", ".pdf", ".jpg", ".jpeg", ".png", ".gif", ".bmp"}
 MAX_FILE_SIZE_MB = 10
@@ -49,7 +59,7 @@ async def upload_file(
             if not refresh_token:
                 raise HTTPException(status_code=401, detail="Token expired. Provide refresh_token.")
             async with httpx.AsyncClient() as client:
-                res = await client.post(REFRESH_URL, json={"refresh_token": refresh_token})
+                res = await client.post(REFR_URL, json={"refresh_token": refresh_token})
                 if res.status_code != 200:
                     raise HTTPException(status_code=401, detail="Refresh token invalid")
                 new_token = res.json()["token"]
@@ -62,12 +72,12 @@ async def upload_file(
     # ─── File Type & Size Check ───
     ext = Path(file.filename).suffix.lower()
     if ext not in ALLOWED_EXTENSIONS:
-        raise HTTPException(status_code=400, detail=f"❌ Unsupported file type: {ext}")
+        raise HTTPException(status_code=400, detail=f"Unsupported file type: {ext}")
 
     contents = await file.read()
     size_mb = len(contents) / (1024 * 1024)
     if size_mb > MAX_FILE_SIZE_MB:
-        raise HTTPException(status_code=400, detail=f"❌ File too large (max {MAX_FILE_SIZE_MB}MB)")
+        raise HTTPException(status_code=400, detail=f"File too large (max {MAX_FILE_SIZE_MB}MB)")
 
     file_path = UPLOAD_DIR / file.filename
     with open(file_path, "wb") as f:
@@ -78,13 +88,13 @@ async def upload_file(
         preview = parse_file(file_path, limit=5)
         preview = clean_json(preview)
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"❌ Failed to parse file: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to parse file: {str(e)}")
 
     # ─── Embedding and Save ───
     match_result = await classify_documents(db)  # Pass file_path to the function
     print(f"Match Result: {match_result}")
     if match_result == '-1':
-        raise HTTPException(status_code=400, detail="❌ Incorrect information provided. Cannot train model.")
+        raise HTTPException(status_code=400, detail="Incorrect information provided. Cannot train model.")
     
     else:
         try:
@@ -121,7 +131,7 @@ async def upload_file(
         else:
             raise HTTPException(status_code=404, detail="User not found")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"❌ Failed to update user with file_id: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to update user with file_id: {str(e)}")
 
     # ─── Optional: Background fine-tune ───
     # background_tasks.add_task(fine_tune)
@@ -131,7 +141,7 @@ async def upload_file(
 
     # ─── Return Response ───
     return JSONResponse(content={
-        "message": f"✅ File {file.filename} uploaded successfully.",
+        "message": f"File {file.filename} uploaded successfully.",
         "filename": file.filename,
         "preview": preview,
         "uploaded_by": user_email,

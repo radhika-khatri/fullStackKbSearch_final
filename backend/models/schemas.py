@@ -1,7 +1,7 @@
 # This file contains Pydantic schemas for the application.
 
 from pydantic import BaseModel, EmailStr, Field
-from typing import Optional, List
+from typing import Optional, List, Union
 from datetime import datetime
 from enum import Enum  
 
@@ -63,6 +63,8 @@ class ItemResponse(ItemBase):
 class Token(BaseModel):
     access_token: str
     token_type: str
+    role: Optional[str] = None
+    user: Optional[dict] = None
 
 
 class TokenData(BaseModel):
@@ -143,6 +145,7 @@ class UserOut(BaseModel):
     name: str
     email: EmailStr
     is_active: bool
+    role: Optional[str] = None
 
     class Config:
         # orm_mode = True

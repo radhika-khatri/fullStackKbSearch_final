@@ -17,8 +17,13 @@ from utils.nlp import analyze_sentiment, compute_embedding
 from utils.common_functions_api import get_file_id_from_token  # <- ✅ new
 from models.schemas import ChatMessage
 from db.crud import save_chat_message, get_conversation_context
+from services.rag import generate_response_with_rag
+import logging
 
-# ───── CONFIG ─────
+# Optional: sentiment and embedding generators
+from utils.nlp import analyze_sentiment, compute_embedding
+
+logger = logging.getLogger(__name__)
 router = APIRouter()
 auth_scheme = HTTPBearer()
 REFRESH_URL = "http://localhost:8000/auth/refresh"

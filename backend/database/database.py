@@ -1,12 +1,12 @@
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from sqlalchemy.orm import sessionmaker, declarative_base
 from sqlalchemy.pool import NullPool
-
-
-
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Update with your local DB credentials
-DATABASE_URL = "postgresql+asyncpg://postgres:12345@localhost:5432/support_db"
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 # Create async engine
 engine = create_async_engine(
@@ -34,7 +34,7 @@ async def get_db():
         async def endpoint(db: AsyncSession = Depends(get_db)):
             ...
     """
-    db = SessionLocal()
+    # db = SessionLocal()
     async with async_session() as session:
         try:
             yield session

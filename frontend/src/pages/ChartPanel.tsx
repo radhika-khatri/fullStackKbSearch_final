@@ -77,26 +77,125 @@ const clickRatePieData = {
 };
 
 export default function ChartPanel() {
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'top' as const,
+        labels: {
+          padding: 15,
+          usePointStyle: true,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        cornerRadius: 8,
+        padding: 12,
+      },
+    },
+    scales: {
+      x: {
+        display: true,
+        grid: {
+          display: false,
+        },
+        ticks: {
+          font: {
+            size: 11,
+          },
+        },
+      },
+      y: {
+        display: true,
+        grid: {
+          color: 'rgba(0, 0, 0, 0.05)',
+        },
+        ticks: {
+          font: {
+            size: 11,
+          },
+        },
+      },
+    },
+  };
+
+  const pieOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: {
+          padding: 15,
+          usePointStyle: true,
+          font: {
+            size: 12,
+          },
+        },
+      },
+      tooltip: {
+        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+        titleColor: '#fff',
+        bodyColor: '#fff',
+        cornerRadius: 8,
+        padding: 12,
+      },
+    },
+  };
+
   return (
-    <div className="chart-grid">
-      <div className="chart-box">
-        <h4>Monthly Revenue</h4>
-        <Line data={revenueLineData} />
+    <div className="charts-container">
+      <div className="charts-header">
+        <h2>Analytics Overview</h2>
+        <p>Comprehensive view of your campaign performance</p>
       </div>
+      
+      <div className="chart-grid">
+        <div className="chart-box">
+          <div className="chart-header">
+            <h4>Monthly Revenue</h4>
+            <span className="chart-subtitle">Trending upward</span>
+          </div>
+          <div className="chart-content">
+            <Line data={revenueLineData} options={chartOptions} />
+          </div>
+        </div>
 
-      <div className="chart-box">
-        <h4>Campaign Distribution</h4>
-        <Pie data={campaignPieData} />
-      </div>
+        <div className="chart-box">
+          <div className="chart-header">
+            <h4>Campaign Distribution</h4>
+            <span className="chart-subtitle">By channel</span>
+          </div>
+          <div className="chart-content">
+            <Pie data={campaignPieData} options={pieOptions} />
+          </div>
+        </div>
 
-      <div className="chart-box">
-        <h4>Audience Growth</h4>
-        <Line data={audienceLineData} />
-      </div>
+        <div className="chart-box">
+          <div className="chart-header">
+            <h4>Audience Growth</h4>
+            <span className="chart-subtitle">Monthly increase</span>
+          </div>
+          <div className="chart-content">
+            <Line data={audienceLineData} options={chartOptions} />
+          </div>
+        </div>
 
-      <div className="chart-box">
-        <h4>Click Rate</h4>
-        <Pie data={clickRatePieData} />
+        <div className="chart-box">
+          <div className="chart-header">
+            <h4>Click Rate</h4>
+            <span className="chart-subtitle">Engagement ratio</span>
+          </div>
+          <div className="chart-content">
+            <Pie data={clickRatePieData} options={pieOptions} />
+          </div>
+        </div>
       </div>
     </div>
   );

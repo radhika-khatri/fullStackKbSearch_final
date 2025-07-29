@@ -1,8 +1,8 @@
 // src/pages/Campaigns.tsx
-import React, { JSX, useState } from 'react';
+import React, { useState, type JSX } from 'react';
 import './campaigns.css';
-import ViewToggle from '../components/ViewToggle.tsx';
-import { exportToCSV, exportToPDF } from '../components/exportUtils.ts';
+import ViewToggle from '../components/ViewToggle';
+import { exportToCSV, exportToPDF } from '../utils/exportUtils';
 import {
   BarChart3, MailOpen, Coins, BarChart, DollarSign,
   Users, Settings, ArrowUpRight
@@ -12,7 +12,7 @@ interface Stat {
   label: string;
   value: string;
   sub: string;
-  icon: React.ReactNode;
+  icon: React.ReactNode; // or even `any` but like… 😬
   bar?: number;
 }
 
@@ -30,12 +30,18 @@ export default function Campaigns() {
   const stats: Stat[] = [
     { label: 'Open Rate', value: '85.8%', sub: '1,846 recipients', icon: <MailOpen />, bar: 85.8 },
     { label: 'Click Rate', value: '59.1%', sub: '1,846 recipients', icon: <BarChart3 />, bar: 59.1 },
-    { label: 'Placed Order Rate', value: '21.4%', sub: '1,846 recipients', icon: <Coins /> },
+    { label: 'Placed Order Rate', value: '21.4%', sub: '1,846 recipients', icon: <Coins />, bar: 21.4 },
     { label: 'Revenue', value: '$12,894.36', sub: 'AOV: $1,485 · Per recip.: $5.37', icon: <DollarSign /> },
   ];
 
-  const engagementData: number[] = Array.from({ length: 29 }, () => Math.floor(Math.random() * 35) + 5);
-  const colors = ['#4a90e2', '#00c9a7', '#ff758c', '#fca311', '#845ec2'];
+  // Generate more realistic engagement data with better distribution
+  const engagementData: number[] = Array.from({ length: 29 }, (_, i) => {
+    const baseValue = 40 + Math.sin(i * 0.5) * 20;
+    const randomVariation = Math.random() * 30;
+    return Math.max(20, Math.floor(baseValue + randomVariation));
+  });
+  
+  const colors = ['#4f46e5', '#7c3aed', '#06b6d4', '#10b981', '#f59e0b'];
 
   const recentCampaigns: Campaign[] = [
     { name: 'Festive Fiesta Frenzy', status: 'Sent', date: 'Sep 15, 2025', openRate: '89%', clickRate: '64%' },
@@ -48,15 +54,20 @@ export default function Campaigns() {
   return (
     <div className="campaigns-wrapper">
       <div className="campaigns-header">
-        <h1 className="campaigns-title">📊 Campaign Analytics</h1>
+        <div>
+          <h1 className="campaigns-title">📊 Campaign Analytics</h1>
+          <div className="last-updated">Updated: July 18, 2025 at 10:48 AM</div>
+        </div>
         <div className="campaigns-controls">
-          <button className="export-btn" onClick={() => exportToCSV(recentCampaigns, 'campaigns')}>Export CSV</button>
-          <button className="export-btn" onClick={() => exportToPDF('campaigns-section', 'campaigns')}>Export PDF</button>
+          <button className="export-btn" onClick={() => exportToCSV(recentCampaigns, 'campaigns')}>
+            Export CSV
+          </button>
+          <button className="export-btn" onClick={() => exportToPDF('campaigns-section', 'campaigns')}>
+            Export PDF
+          </button>
           <ViewToggle currentView={viewMode} onToggle={toggleView} />
         </div>
       </div>
-
-      <div className="last-updated">Updated: July 3, 2025 at 10:48 AM</div>
 
       <div className="campaigns-stats">
         {stats.map((stat, i) => (
@@ -80,31 +91,37 @@ export default function Campaigns() {
         {viewMode === 'chart' ? (
           <div className="engagement-chart">
             <div className="chart-header">
-              <BarChart /> Engagement Over Time
+              <BarChart />
+              <span>Engagement Over Time</span>
             </div>
             <div className="bar-container">
               {engagementData.map((val, i) => (
                 <div
                   key={i}
-                  className="bar"
-                  style={{
-                    height: `${val * 3}px`,
-                    background: `linear-gradient(135deg, ${colors[i % colors.length]}, ${colors[(i + 2) % colors.length]})`
-                  }}
-                  title={`Day ${i + 1}: ${val}`}
-                />
+                  className="bar-wrapper"
+                  title={`Day ${i + 1}: ${val}% engagement`}
+                >
+                  <div
+                    className="bar"
+                    style={{
+                      height: `${Math.max(val * 3, 60)}px`,
+                      background: `linear-gradient(135deg, ${colors[i % colors.length]}, ${colors[(i + 1) % colors.length]})`
+                    }}
+                  />
+                  <span className="bar-label">{i + 1}</span>
+                </div>
               ))}
             </div>
           </div>
         ) : (
           <div className="campaigns-summary">
-            <h2 className="summary-title">Recent Campaigns</h2>
+            <h2 className="summary-title">📋 Recent Campaigns</h2>
             <table className="campaigns-table">
               <thead>
                 <tr>
-                  <th>Name</th>
+                  <th>Campaign Name</th>
                   <th>Status</th>
-                  <th>Date</th>
+                  <th>Launch Date</th>
                   <th>Open Rate</th>
                   <th>Click Rate</th>
                 </tr>
@@ -112,11 +129,11 @@ export default function Campaigns() {
               <tbody>
                 {recentCampaigns.map((c, i) => (
                   <tr key={i}>
-                    <td>{c.name}</td>
+                    <td><strong>{c.name}</strong></td>
                     <td><span className={`status-tag ${c.status.toLowerCase()}`}>{c.status}</span></td>
                     <td>{c.date}</td>
-                    <td>{c.openRate}</td>
-                    <td>{c.clickRate}</td>
+                    <td><strong>{c.openRate}</strong></td>
+                    <td><strong>{c.clickRate}</strong></td>
                   </tr>
                 ))}
               </tbody>

@@ -106,3 +106,62 @@ def parse_file(file_path: Path, limit: int = 10):
 
     except Exception as e:
         raise RuntimeError(f"❌ Failed to parse file: {str(e)}")
+
+
+def extract_full_text(file_path: Path):
+    """
+    Extract full text content from files for embedding generation.
+    
+    Args:
+        file_path (Path): Path to the uploaded file
+        
+    Returns:
+        str: Full text content of the file
+    """
+    ext = file_path.suffix.lower()
+    
+    try:
+        if ext == ".csv":
+            df = pd.read_csv(file_path)
+            # Convert dataframe to text representation
+            return df.to_string()
+            
+        elif ext == ".xlsx":
+            df = pd.read_excel(file_path)
+            return df.to_string()
+            
+        elif ext == ".json":
+            with open(file_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    # For knowledge base JSON files, extract questions and answers
+                    text_parts = []
+                    for item in data:
+                        if isinstance(item, dict):
+                            if 'question' in item and 'answer' in item:
+                                text_parts.append(f"Q: {item['question']}\nA: {item['answer']}")
+                            else:
+                                text_parts.append(str(item))
+                    return "\n\n".join(text_parts)
+                else:
+                    return json.dumps(data, indent=2)
+                    
+        elif ext == ".txt":
+            with open(file_path, "r", encoding="utf-8") as f:
+                return f.read()
+                
+        elif ext == ".pdf":
+            full_text = []
+            with open(file_path, "rb") as f:
+                reader = PyPDF2.PdfReader(f)
+                for page in reader.pages:
+                    text = page.extract_text()
+                    if text:
+                        full_text.append(text)
+            return "\n".join(full_text)
+            
+        else:
+            raise ValueError(f"Unsupported file type for text extraction: {ext}")
+            
+    except Exception as e:
+        raise RuntimeError(f"❌ Failed to extract full text: {str(e)}")

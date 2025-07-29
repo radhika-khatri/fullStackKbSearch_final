@@ -1,0 +1,20 @@
+[
+  {
+    "prompt": "How can I reset my password?",
+    "response": "You can reset your password by clicking on 'Forgot Password' at the login screen.",
+    "sentiment": "positive"
+  },
+  {
+    "prompt": "Why is the app crashing on startup?",
+    "response": "We’re sorry for the inconvenience. Please try reinstalling the app or updating to the latest version.",
+    "sentiment": "negative"
+  },
+  {
+    "prompt": "What features does the premium plan offer?",
+    "response": "The premium plan includes ad-free usage, advanced analytics, and priority support.",
+    "sentiment": "neutral"
+  }
+]
+
+
+

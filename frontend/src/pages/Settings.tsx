@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  BiUser, BiNotification, BiSun, BiMoon, BiShield,
-  BiGlobe, BiDownload, BiTrash, BiEdit, BiSave,
-  BiX, BiCheck, BiCog, BiKey, BiEnvelope, BiPhone,
-  BiAtom // Using BiAtom for AI, or choose another relevant icon
+  BiUser, BiNotification, BiCog, BiShield,
+  BiDownload, BiTrash, BiEdit, BiSave,
+  BiX, BiCheck, BiEnvelope, BiPhone,
+  BiAtom, // Using BiAtom for AI, or choose another relevant icon
+  BiKey // <--- ADDED BiKey HERE
 } from 'react-icons/bi';
 import './Settings.css';
 
@@ -129,40 +130,34 @@ export default function Settings() {
     // For simplicity, we won't implement a full reset here.
   };
 
-  // --- New function to simulate API key test ---
+  // --- Updated function to simulate API key test ---
   const testApiKey = async (provider: 'gemini' | 'openai', apiKey: string) => {
-    console.log(`Testing ${provider} API Key: ${apiKey}`);
-    // In a real application, you would make an API call to your backend
-    // or directly to the AI provider's API (if CORS allowed and key isn't sensitive).
-    // Example:
-    // try {
-    //   const response = await fetch(`/api/test-${provider}-key`, {
-    //     method: 'POST',
-    //     headers: { 'Content-Type': 'application/json' },
-    //     body: JSON.stringify({ apiKey })
-    //   });
-    //   const data = await response.json();
-    //   if (response.ok) {
-    //     alert(`${provider} API Key is valid!`);
-    //   } else {
-    //     alert(`${provider} API Key is invalid: ${data.message || 'Unknown error'}`);
-    //   }
-    // } catch (error) {
-    //   alert(`Error testing ${provider} API Key: ${error.message}`);
-    // }
-
-    // Simulating API response with a delay
     setLoading(true);
+    console.log(`Attempting to test ${provider.toUpperCase()} API Key: ${apiKey}`);
+
+    // Simulate an asynchronous API call
     setTimeout(() => {
       setLoading(false);
-      if (apiKey && apiKey.length > 10 && apiKey.startsWith('sk-')) { // Simple dummy validation
-        alert(`${provider} API Key is valid!`);
-        console.log(`Test for ${provider} API Key successful.`);
-      } else {
-        alert(`${provider} API Key is invalid. Please check the key format.`);
-        console.warn(`Test for ${provider} API Key failed.`);
+      let isValid = false;
+
+      if (provider === 'gemini') {
+        // Simple mock validation for Gemini: check if it starts with "AIza" (common for Google API keys)
+        // In a real scenario, you'd make a call to a Gemini API endpoint.
+        isValid = apiKey.startsWith('AIza') && apiKey.length > 30;
+      } else if (provider === 'openai') {
+        // Simple mock validation for OpenAI: check if it starts with "sk-"
+        // In a real scenario, you'd make a call to an OpenAI API endpoint (e.g., /v1/models).
+        isValid = apiKey.startsWith('sk-') && apiKey.length > 30;
       }
-    }, 1500);
+
+      if (isValid) {
+        alert(`${provider.toUpperCase()} API Key is valid!`);
+        console.log(`Test for ${provider.toUpperCase()} API Key successful.`);
+      } else {
+        alert(`${provider.toUpperCase()} API Key is invalid. Please check the key format.`);
+        console.warn(`Test for ${provider.toUpperCase()} API Key failed.`);
+      }
+    }, 1500); // Simulate network delay
   };
 
   const tabItems = [
@@ -494,7 +489,7 @@ export default function Settings() {
       <div className="security-settings">
         <div className="security-item">
           <div className="security-info">
-            <BiKey className="security-icon" />
+            <BiKey className="security-icon" /> {/* This is where BiKey is used */}
             <div>
               <span>Change Password</span>
               <p>Update your account password</p>
@@ -549,7 +544,7 @@ export default function Settings() {
         {/* Gemini API Key */}
         <div className="setting-item api-key-item">
           <div className="setting-info">
-            <span>Gemini API Key</span> {/* Changed label */}
+            <span>Gemini API Key</span>
             <p>Enter your Gemini API key</p>
           </div>
           <div className="api-key-input-group">
@@ -568,14 +563,14 @@ export default function Settings() {
         {/* OpenAI API Key */}
         <div className="setting-item api-key-item">
           <div className="setting-info">
-            <span>OpenAI API Key</span> {/* Changed label and purpose */}
+            <span>OpenAI API Key</span>
             <p>Enter your OpenAI API key</p>
           </div>
           <div className="api-key-input-group">
             <input
               type="text"
               placeholder="Enter your OpenAI API key"
-              value={aiConfigurations.openAiApiKey} // Changed state variable
+              value={aiConfigurations.openAiApiKey}
               onChange={(e) => setAiConfigurations(prev => ({ ...prev, openAiApiKey: e.target.value }))}
             />
             <button className="test-button" onClick={() => testApiKey('openai', aiConfigurations.openAiApiKey)} disabled={loading}>
@@ -648,10 +643,11 @@ export default function Settings() {
           </label>
         </div>
 
-        {/* API Provider */}
-        <div className="setting-item">
+        {/* API Provider - Full Width */}
+        <div className="setting-item api-provider-item">
           <div className="setting-info">
             <span>API Provider</span>
+            <p>Select your preferred AI service provider</p>
           </div>
           <select
             value={aiConfigurations.apiProvider}
@@ -659,11 +655,26 @@ export default function Settings() {
           >
             <option value="openai">OpenAI (ChatGPT)</option>
             <option value="gemini">Google Gemini</option>
-            <option value="mistral">Mistral AI</option> {/* Kept Mistral as an option for consistency with dropdown, though input changed */}
+            <option value="mistral">Mistral AI</option>
           </select>
         </div>
+      </div>
 
-        <h3 style={{ marginTop: '1.5rem', marginBottom: '1rem', fontSize: '1.25rem', borderBottom: '1px solid #eee', paddingBottom: '0.5rem' }}>Widget Customization</h3>
+      {/* Widget Customization Section */}
+      <div className="widget-section">
+        <h3 style={{ 
+          fontSize: '1.25rem', 
+          marginBottom: '1.5rem', 
+          color: '#333', 
+          borderBottom: '2px solid #007bff', 
+          paddingBottom: '0.5rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.5rem'
+        }}>
+          <BiAtom style={{ color: '#007bff' }} />
+          Widget Customization
+        </h3>
 
         <div className="widget-customization-grid">
           <div className="setting-item">
@@ -749,6 +760,31 @@ export default function Settings() {
         <button className="save-button" onClick={handleSave} disabled={loading}>
           <BiSave />
           {loading ? 'Saving...' : 'Save Widget Configuration'}
+        </button>
+        <button
+          className="activate-button"
+          style={{ marginLeft: 16, background: '#4CAF50', color: '#fff', padding: '0.5rem 1.5rem', borderRadius: 6, border: 'none', fontWeight: 600, cursor: 'pointer' }}
+          onClick={async () => {
+            setLoading(true);
+            try {
+              // Replace with actual user ID logic
+              const userId = window.localStorage.getItem('userId') || '1';
+              const res = await fetch(`/api/widget-config/${userId}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(aiConfigurations),
+              });
+              if (!res.ok) throw new Error('Failed to activate widget config');
+              setSaveMessage('Widget configuration activated!');
+            } catch (err) {
+              setSaveMessage('Failed to activate widget config');
+            } finally {
+              setLoading(false);
+            }
+          }}
+          disabled={loading}
+        >
+          Activate
         </button>
       </div>
     </div>

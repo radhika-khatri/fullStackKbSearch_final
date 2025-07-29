@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { uploadFile, getKBEntries, createKBEntry, deleteKBEntry, updateKBEntry } from '../services/api';
+import ConfirmModal from '../components/ConfirmModal';
 import '../pages/KnowledgeBase.css';
 
-type KBEntry = { 
+type KBEntry = {
   id: number;
-  question: string; 
+  question: string;
   answer: string;
   created_at?: string;
 };
@@ -17,8 +18,8 @@ export default function KnowledgeBase() {
   const [uploadStatus, setUploadStatus] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [editingEntry, setEditingEntry] = useState<KBEntry | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<number | null>(null);
 
-  // Load KB entries on component mount
   useEffect(() => {
     loadKBEntries();
   }, []);
@@ -27,7 +28,7 @@ export default function KnowledgeBase() {
     try {
       setLoading(true);
       const response = await getKBEntries();
-      setEntries(response);
+      setEntries(response.data.entries);
     } catch (error) {
       console.error('Error loading KB entries:', error);
       setUploadStatus('Error loading entries');
@@ -39,23 +40,20 @@ export default function KnowledgeBase() {
   const handleAdd = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!question.trim() || !answer.trim()) return;
-    
+
     try {
       setLoading(true);
       if (editingEntry) {
-        // Update existing entry
         await updateKBEntry(editingEntry.id, question, answer);
         setEditingEntry(null);
         setUploadStatus('Entry updated successfully!');
       } else {
-        // Create new entry
         await createKBEntry(question, answer);
         setUploadStatus('Entry added successfully!');
       }
-      
       setQuestion('');
       setAnswer('');
-      await loadKBEntries(); // Refresh the list
+      await loadKBEntries();
     } catch (error) {
       console.error('Error saving entry:', error);
       setUploadStatus('Error saving entry');
@@ -72,26 +70,19 @@ export default function KnowledgeBase() {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm('Are you sure you want to delete this entry?')) return;
-    
     try {
       setLoading(true);
       await deleteKBEntry(id);
       setUploadStatus('Entry deleted successfully!');
-      await loadKBEntries(); // Refresh the list
+      await loadKBEntries();
     } catch (error) {
       console.error('Error deleting entry:', error);
       setUploadStatus('Error deleting entry');
     } finally {
       setLoading(false);
+      setConfirmDeleteId(null);
       setTimeout(() => setUploadStatus(null), 3000);
     }
-  };
-
-  const cancelEdit = () => {
-    setEditingEntry(null);
-    setQuestion('');
-    setAnswer('');
   };
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -102,12 +93,10 @@ export default function KnowledgeBase() {
       try {
         const formData = new FormData();
         formData.append('file', file);
-
         const response = await uploadFile(formData);
-        
+
         if (response.data) {
           setUploadStatus(`✅ ${response.data.message}`);
-          // Refresh KB entries after successful upload
           await loadKBEntries();
         } else {
           setUploadStatus('Upload failed: Unknown error');
@@ -122,6 +111,12 @@ export default function KnowledgeBase() {
     }
   };
 
+  const cancelEdit = () => {
+    setEditingEntry(null);
+    setQuestion('');
+    setAnswer('');
+  };
+
   return (
     <div className="kb-layout">
       <h1 className="kb-title">📚 Knowledge Base</h1>
@@ -134,10 +129,12 @@ export default function KnowledgeBase() {
 
       <div className="kb-card upload-card">
         <h3>📤 Upload Dataset</h3>
-        <p className="card-description">Upload CSV, JSON, TXT, PDF, or Excel files to automatically populate the knowledge base</p>
-        <input 
-          type="file" 
-          onChange={handleFileUpload} 
+        <p className="card-description">
+          Upload CSV, JSON, TXT, PDF, or Excel files to automatically populate the knowledge base
+        </p>
+        <input
+          type="file"
+          onChange={handleFileUpload}
           accept=".csv,.json,.xlsx,.txt,.pdf,.jpg,.jpeg,.png,.gif,.bmp"
           disabled={loading}
         />
@@ -170,7 +167,7 @@ export default function KnowledgeBase() {
           />
 
           <div className="form-buttons">
-            <button type="submit" disabled={loading || (!question.trim() || !answer.trim())}>
+            <button type="submit" disabled={loading || !question.trim() || !answer.trim()}>
               {loading ? '⏳ Saving...' : editingEntry ? '💾 Update Entry' : '➕ Add Entry'}
             </button>
             {editingEntry && (
@@ -183,7 +180,7 @@ export default function KnowledgeBase() {
       </div>
 
       <div className="kb-card entries-card">
-        <h3> Existing Entries ({entries.length})</h3>
+        <h3>📋 Existing Entries ({entries.length})</h3>
         {loading && entries.length === 0 ? (
           <p className="file-info">⏳ Loading entries...</p>
         ) : entries.length === 0 ? (
@@ -201,21 +198,21 @@ export default function KnowledgeBase() {
                   </div>
                   {entry.created_at && (
                     <div className="entry-date">
-                       Added: {new Date(entry.created_at).toLocaleDateString()}
+                      📅 Added: {new Date(entry.created_at).toLocaleDateString()}
                     </div>
                   )}
                 </div>
                 <div className="entry-actions">
-                  <button 
-                    onClick={() => handleEdit(entry)} 
+                  <button
+                    onClick={() => handleEdit(entry)}
                     className="edit-btn"
                     disabled={loading}
                     title="Edit entry"
                   >
                     ✏️
                   </button>
-                  <button 
-                    onClick={() => handleDelete(entry.id)} 
+                  <button
+                    onClick={() => setConfirmDeleteId(entry.id)}
                     className="delete-btn"
                     disabled={loading}
                     title="Delete entry"
@@ -228,6 +225,16 @@ export default function KnowledgeBase() {
           </div>
         )}
       </div>
+
+      {confirmDeleteId !== null && (
+        <ConfirmModal
+          title="Delete Entry"
+          description="Are you sure you want to delete this entry?"
+          onConfirm={() => handleDelete(confirmDeleteId)}
+          onClose={() => setConfirmDeleteId(null)}
+          open={true}
+        />
+      )}
     </div>
   );
 }

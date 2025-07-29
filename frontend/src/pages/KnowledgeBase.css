@@ -2,8 +2,8 @@
 
 .kb-layout {
   padding: 40px 20px;
-  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
-  color: #fff;
+  background: linear-gradient(to bottom right, #f0f4f8, #d9e2ec, #bcccdc);
+  color: #333;
   min-height: 100vh;
   font-family: 'Segoe UI', sans-serif;
 }
@@ -13,16 +13,16 @@
   font-weight: 700;
   margin-bottom: 30px;
   text-align: center;
-  color: #ffffffdd;
+  color: #333333dd;
 }
 
 .kb-card {
-  background-color: rgba(255, 255, 255, 0.07);
-  backdrop-filter: blur(10px);
+  background-color: #ffffff;
+  backdrop-filter: none;
   border-radius: 14px;
   padding: 24px;
   margin-bottom: 30px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease;
 }
 
@@ -34,7 +34,7 @@
   margin-bottom: 20px;
   font-size: 20px;
   font-weight: 600;
-  color: #f2f2f2;
+  color: #333;
 }
 
 .upload-card input[type="file"] {
@@ -61,7 +61,7 @@
 
 .form-card label {
   font-weight: 500;
-  color: #ddd;
+  color: #333;
   margin-bottom: 6px;
   display: block;
 }
@@ -126,7 +126,7 @@
 
 .accordion-header button {
   background: none;
-  color: #fff;
+  color: #333;
   font-weight: 600;
 }
 
@@ -136,10 +136,10 @@
 }
 
 .accordion-body {
-  background-color: #2c3e50;
+  background-color: #ffffff;
   border-radius: 0 0 10px 10px;
   padding: 16px;
-  color: #ccc;
+  color: #333;
 }
 
 /* Status Messages */
@@ -166,7 +166,7 @@
 
 /* Card Description */
 .card-description {
-  color: #cccccc;
+  color: #333;
   font-size: 14px;
   margin-bottom: 16px;
   line-height: 1.4;
@@ -247,13 +247,13 @@
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
-  color: #ffffff;
+  color: #333;
 }
 
 .entry-answer {
   font-size: 14px;
   line-height: 1.5;
-  color: #e0e0e0;
+  color: #666;
   margin-bottom: 8px;
 }
 

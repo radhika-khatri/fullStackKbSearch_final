@@ -6,6 +6,7 @@ from database.database import get_db
 from sqlalchemy.ext.asyncio import AsyncSession
 from db import crud
 from models import schemas
+from supabase import create_client, Client
 
 from utils.auth_utils import (
     authenticate_user,
@@ -15,6 +16,11 @@ from utils.auth_utils import (
 )
 
 router = APIRouter()
+
+# Initialize Supabase client
+supabase_url = "https://ddfuhlysbhdfjrnaadlk.supabase.co"
+supabase_key = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRkZnVobHlzYmhkZmpybmFhZGxrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTMwODYyNjMsImV4cCI6MjA2ODY2MjI2M30.nTuVs5VNKd_MhYwrjslH1wr_XtOdCS0M3QnVEtcWp6g"
+supabase: Client = create_client(supabase_url, supabase_key)
 
 @router.post("/login", response_model=schemas.Token)
 async def login(form_data: schemas.LoginRequest = Depends(), db: AsyncSession = Depends(get_db)):

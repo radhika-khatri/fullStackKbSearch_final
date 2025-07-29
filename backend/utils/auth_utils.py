@@ -32,7 +32,7 @@ def get_password_hash(password):
     return pwd_context.hash(password)
 
 async def authenticate_user(db: AsyncSession, email: str, password: str, role: str):
-    user = await get_user_by_email(db, email)
+    user = await crud.get_user_by_email(db, email)
     if not user:
         return None
     if not verify_password(password, user.hashed_password):
@@ -82,6 +82,5 @@ async def register_user_helper(db: AsyncSession, user: schemas.UserCreate) -> sc
         )
 
     hashed_password = pwd_context.hash(user.password)
-    created_user = await create_user(db, user, hashed_password)
+    created_user = await crud.create_user(db, user, hashed_password)
     return created_user
-

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import './Login.css';
-import { FaEnvelope, FaLock, FaBolt, FaChartLine } from 'react-icons/fa';
+import { FaEnvelope, FaLock, FaBolt, FaChartLine, FaFish, FaShieldAlt, FaRocket } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../contexts/AuthContext';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [role, setRole] = useState<'admin' | 'user'>('admin');
+  const [role, setRole] = useState('admin');
   const navigate = useNavigate();
+  const { login } = useAuth();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,79 +24,131 @@ export default function Login() {
 
     setLoading(true);
     try {
-      const response = await fetch('http://localhost:8000/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password, role }),
-      });
-
-      const data = await response.json();
+      const success = await login(email, password, role);
       setLoading(false);
 
-      if (response.ok && data.access_token) {
-        localStorage.setItem('token', data.access_token);
-
+      if (success) {
+        // Redirect based on role
         if (role === 'admin') {
           navigate('/dashboard');
         } else {
           navigate('/user-dashboard');
         }
       } else {
-        setError(data.detail || 'Login failed. Please try again.');
+        setError('Login failed. Please check your credentials.');
       }
     } catch (err) {
+      setError('An error occurred during login.');
       setLoading(false);
-      setError('Network error. Please try again.');
     }
   };
 
   const Logo = () => (
     <div className="login-logo">
-      <FaChartLine size={48} color="#1DA1F2" />
+      <img src="/AppgallopLG1.png" alt="AppGallop Logo" className="logo-image" />
     </div>
   );
 
   const WelcomeMessage = () => (
     <>
-      <h2 className="login-title">Welcome back to BirdAI</h2>
-      <p className="login-subtext">
-        Sign in to manage your conversations, models, and dashboards.
-      </p>
+      <h2 className="login-title">Welcome to AppGallop</h2>
+      <p className="login-subtext">Access your intelligent platform and manage your business operations with ease.</p>
     </>
   );
 
   const Benefits = () => (
-    <ul className="login-benefits">
-      <li><FaBolt /> Fast and intelligent AI support</li>
-      <li><FaLock /> Secure, encrypted user access</li>
-      <li><FaChartLine /> Real-time analytics dashboard</li>
-    </ul>
+    <div className="login-benefits">
+      <div className="benefit-item">
+        <FaRocket className="benefit-icon" />
+        <div>
+          <h4>Smart Solutions</h4>
+          <p>Intelligent business tools powered by advanced technology</p>
+        </div>
+      </div>
+      <div className="benefit-item">
+        <FaShieldAlt className="benefit-icon" />
+        <div>
+          <h4>Secure Platform</h4>
+          <p>Enterprise-grade security for your business data</p>
+        </div>
+      </div>
+      <div className="benefit-item">
+        <FaChartLine className="benefit-icon" />
+        <div>
+          <h4>Fast Performance</h4>
+          <p>Get instant results with our optimized platform</p>
+        </div>
+      </div>
+    </div>
   );
 
   return (
     <div className="login-cover">
       <div className="login-left-panel">
-        <Logo />
-        <h1 className="brand-name">BirdAI</h1>
-        <p className="brand-tagline">Powering smart conversations with AI.</p>
+        <div className="brand-section">
+          <Logo />
+          <h1 className="brand-name">AppGallop</h1>
+          <p className="brand-tagline">Intelligent business solutions at your fingertips</p>
+        </div>
         <Benefits />
+        <div className="decorative-elements">
+          <div className="floating-shape shape-1"></div>
+          <div className="floating-shape shape-2"></div>
+          <div className="floating-shape shape-3"></div>
+        </div>
       </div>
 
       <div className="login-right-panel">
         <div className="login-card">
-          <Logo />
           <WelcomeMessage />
-          {error && <div className="login-error">{error}</div>}
-          <form onSubmit={handleLogin} className="login-form">
+          {error && <div className="login-error">{typeof error === 'string' ? error : 'An error occurred'}</div>}
+          <form onSubmit={async (e) => {
+            e.preventDefault();
+            setLoading(true);
+            try {
+              const res = await fetch('http://localhost:8004/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password, role }),
+              });
+
+              const data = await res.json();
+
+              if (res.ok) {
+                localStorage.setItem('authToken', data.access_token);
+                localStorage.setItem('userRole', data.role);
+                localStorage.setItem('userData', JSON.stringify(data.user));
+                
+                // Role-based redirection
+                if (role === 'user') {
+                  navigate('/user-dashboard');
+                } else if (role === 'admin') {
+                  navigate('/dashboard');
+                } else {
+                  navigate('/dashboard'); // Default fallback
+                }
+              } else {
+                let errorMessage = 'Login failed.';
+                if (data.detail) {
+                  errorMessage = typeof data.detail === 'string' ? data.detail : data.detail.join(', ');
+                }
+                alert(`❌ ${errorMessage}`);
+              }
+            } catch (err) {
+              alert('❌ An error occurred during login.');
+            } finally {
+              setLoading(false);
+            }
+          }} className="login-form">
             <div className="login-form-group">
-              <label>Email</label>
+              <label>Email Address</label>
               <div className="input-icon-wrapper">
                 <FaEnvelope className="icon" />
                 <input
                   type="email"
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="Enter your email"
+                  placeholder="Enter your email address"
                 />
               </div>
             </div>
@@ -112,33 +166,46 @@ export default function Login() {
               </div>
             </div>
 
-            <div style={{ margin: '16px 0' }}>
-              <label>
-                <input
-                  type="radio"
-                  name="role"
-                  value="admin"
-                  checked={role === 'admin'}
-                  onChange={() => setRole('admin')}
-                /> Admin
-              </label>
-              <label style={{ marginLeft: 16 }}>
-                <input
-                  type="radio"
-                  name="role"
-                  value="user"
-                  checked={role === 'user'}
-                  onChange={() => setRole('user')}
-                /> User
-              </label>
+            <div className="role-selection">
+              <span className="role-label">Login as:</span>
+              <div className="role-options">
+                <label className={`role-option ${role === 'admin' ? 'active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="admin"
+                    checked={role === 'admin'}
+                    onChange={() => setRole('admin')}
+                  />
+                  <span className="role-text">Admin</span>
+                </label>
+                <label className={`role-option ${role === 'user' ? 'active' : ''}`}>
+                  <input
+                    type="radio"
+                    name="role"
+                    value="user"
+                    checked={role === 'user'}
+                    onChange={() => setRole('user')}
+                  />
+                  <span className="role-text">User</span>
+                </label>
+              </div>
             </div>
 
             <button className="login-btn" type="submit" disabled={loading}>
-              {loading ? 'Signing in...' : 'Login'}
+              {loading ? (
+                <span className="loading-text">
+                  <span className="spinner"></span>
+                  Signing in...
+                </span>
+              ) : (
+                'Sign In'
+              )}
             </button>
           </form>
+          
           <div className="login-footer">
-            <a href="/register">Don't have an account? Register</a>
+            <p>Don't have an account? <a href="/register">Create one here</a></p>
           </div>
         </div>
       </div>

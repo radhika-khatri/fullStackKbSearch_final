@@ -1,0 +1,602 @@
+[
+  {
+    "id": 1,
+    "question": "What is AppGallop?",
+    "answer": "AppGallop is a comprehensive digital solution provider specializing in mobile app development, web development, and AI-powered business solutions. We help businesses transform their ideas into powerful digital experiences.",
+    "category": "Company Info"
+  },
+  {
+    "id": 2,
+    "question": "What services does AppGallop offer?",
+    "answer": "AppGallop offers mobile app development (iOS & Android), web application development, AI chatbot solutions, e-commerce platforms, digital marketing, UI/UX design, and cloud infrastructure services.",
+    "category": "Services"
+  },
+  {
+    "id": 3,
+    "question": "How long does it take to develop a mobile app?",
+    "answer": "Mobile app development typically takes 3-6 months depending on complexity. Simple apps take 2-3 months, medium complexity apps take 4-5 months, and complex enterprise apps can take 6-12 months.",
+    "category": "Development"
+  },
+  {
+    "id": 4,
+    "question": "What technologies do you use for mobile development?",
+    "answer": "We use React Native, Flutter, Swift (iOS native), Kotlin (Android native), and cross-platform solutions. Our choice depends on your specific requirements and target audience.",
+    "category": "Technology"
+  },
+  {
+    "id": 5,
+    "question": "Do you provide app maintenance and support?",
+    "answer": "Yes, we provide comprehensive maintenance and support services including bug fixes, performance optimization, security updates, feature enhancements, and 24/7 technical support.",
+    "category": "Support"
+  },
+  {
+    "id": 6,
+    "question": "What is the cost of developing a mobile app?",
+    "answer": "App development costs vary from $10,000 for simple apps to $100,000+ for complex enterprise solutions. We provide detailed quotes after understanding your specific requirements.",
+    "category": "Pricing"
+  },
+  {
+    "id": 7,
+    "question": "Do you develop both iOS and Android apps?",
+    "answer": "Yes, we develop native iOS apps, native Android apps, and cross-platform solutions that work on both platforms. We recommend the best approach based on your needs and budget.",
+    "category": "Platform"
+  },
+  {
+    "id": 8,
+    "question": "What is your app development process?",
+    "answer": "Our process includes: 1) Requirements gathering, 2) UI/UX design, 3) Development & coding, 4) Testing & QA, 5) Deployment, 6) Maintenance & support. We follow agile methodology with regular updates.",
+    "category": "Process"
+  },
+  {
+    "id": 9,
+    "question": "Can you help with app store submission?",
+    "answer": "Absolutely! We handle the complete app store submission process for both Google Play Store and Apple App Store, including optimization, compliance checks, and approval follow-ups.",
+    "category": "Publishing"
+  },
+  {
+    "id": 10,
+    "question": "Do you provide UI/UX design services?",
+    "answer": "Yes, we have a dedicated design team that creates stunning, user-friendly interfaces. Our designs focus on usability, accessibility, and modern design principles.",
+    "category": "Design"
+  },
+  {
+    "id": 11,
+    "question": "What is React Native?",
+    "answer": "React Native is a cross-platform mobile development framework that allows us to build apps for both iOS and Android using a single codebase, reducing development time and costs.",
+    "category": "Technology"
+  },
+  {
+    "id": 12,
+    "question": "Do you offer web development services?",
+    "answer": "Yes, we develop responsive websites, web applications, e-commerce platforms, and progressive web apps using modern technologies like React, Angular, Node.js, and Python.",
+    "category": "Web Development"
+  },
+  {
+    "id": 13,
+    "question": "What is AI chatbot development?",
+    "answer": "We create intelligent chatbots using natural language processing and machine learning that can handle customer queries, provide support, and automate business processes 24/7.",
+    "category": "AI Solutions"
+  },
+  {
+    "id": 14,
+    "question": "How do you ensure app security?",
+    "answer": "We implement multiple security layers including data encryption, secure API calls, authentication systems, regular security audits, and compliance with industry standards like GDPR and HIPAA.",
+    "category": "Security"
+  },
+  {
+    "id": 15,
+    "question": "Can you integrate third-party APIs?",
+    "answer": "Yes, we integrate various third-party services including payment gateways, social media APIs, mapping services, analytics tools, and custom business APIs.",
+    "category": "Integration"
+  },
+  {
+    "id": 16,
+    "question": "What is your refund policy?",
+    "answer": "We offer milestone-based payments with clear deliverables. If you're not satisfied with a milestone, we work to resolve issues. Full refunds are considered on a case-by-case basis within the first 30 days.",
+    "category": "Policy"
+  },
+  {
+    "id": 17,
+    "question": "Do you sign NDAs?",
+    "answer": "Yes, we always sign Non-Disclosure Agreements to protect your intellectual property and business ideas. Your confidentiality is our priority.",
+    "category": "Legal"
+  },
+  {
+    "id": 18,
+    "question": "What industries do you serve?",
+    "answer": "We serve healthcare, fintech, e-commerce, education, real estate, logistics, entertainment, food delivery, fitness, and many other industries with specialized solutions.",
+    "category": "Industries"
+  },
+  {
+    "id": 19,
+    "question": "Do you provide cloud hosting services?",
+    "answer": "Yes, we offer cloud infrastructure setup and management using AWS, Google Cloud, and Azure. We handle deployment, scaling, monitoring, and maintenance.",
+    "category": "Cloud Services"
+  },
+  {
+    "id": 20,
+    "question": "What is MVP development?",
+    "answer": "Minimum Viable Product (MVP) development helps you launch quickly with core features to test market response. It's a cost-effective way to validate your idea before full development.",
+    "category": "Strategy"
+  },
+  {
+    "id": 21,
+    "question": "How do you handle project communication?",
+    "answer": "We use project management tools like Slack, Trello, and Zoom for regular communication. You'll receive weekly progress reports and have direct access to your development team.",
+    "category": "Communication"
+  },
+  {
+    "id": 22,
+    "question": "What is progressive web app development?",
+    "answer": "Progressive Web Apps (PWAs) combine the best of web and mobile apps. They work offline, load quickly, and can be installed on devices while being accessible through browsers.",
+    "category": "Web Technology"
+  },
+  {
+    "id": 23,
+    "question": "Do you offer digital marketing services?",
+    "answer": "Yes, we provide app store optimization (ASO), social media marketing, Google Ads campaigns, content marketing, and SEO services to help promote your app or website.",
+    "category": "Marketing"
+  },
+  {
+    "id": 24,
+    "question": "What is your team size?",
+    "answer": "AppGallop has a team of 50+ professionals including developers, designers, project managers, QA engineers, and digital marketing specialists with expertise across various technologies.",
+    "category": "Team"
+  },
+  {
+    "id": 25,
+    "question": "Can you modernize legacy applications?",
+    "answer": "Yes, we specialize in legacy application modernization, migrating old systems to modern technologies, improving performance, and adding new features while maintaining data integrity.",
+    "category": "Modernization"
+  },
+  {
+    "id": 26,
+    "question": "What is agile development methodology?",
+    "answer": "Agile methodology involves iterative development with regular sprints, continuous feedback, and flexible adaptation to changes. It ensures faster delivery and better quality products.",
+    "category": "Methodology"
+  },
+  {
+    "id": 27,
+    "question": "Do you provide analytics and reporting?",
+    "answer": "Yes, we integrate analytics tools like Google Analytics, Firebase Analytics, and custom dashboards to track user behavior, app performance, and business metrics.",
+    "category": "Analytics"
+  },
+  {
+    "id": 28,
+    "question": "What is blockchain development?",
+    "answer": "We develop blockchain applications, smart contracts, cryptocurrency wallets, and decentralized applications (DApps) using technologies like Ethereum, Solidity, and Web3.",
+    "category": "Blockchain"
+  },
+  {
+    "id": 29,
+    "question": "How do you ensure code quality?",
+    "answer": "We follow coding standards, conduct regular code reviews, implement automated testing, use continuous integration/deployment, and maintain comprehensive documentation.",
+    "category": "Quality Assurance"
+  },
+  {
+    "id": 30,
+    "question": "What is API development?",
+    "answer": "We create robust RESTful APIs and GraphQL endpoints that enable seamless data exchange between applications, ensuring scalability, security, and optimal performance.",
+    "category": "Backend"
+  },
+  {
+    "id": 31,
+    "question": "Do you offer consultation services?",
+    "answer": "Yes, we provide technical consultation, digital transformation strategy, technology stack recommendations, and project feasibility analysis to help you make informed decisions.",
+    "category": "Consultation"
+  },
+  {
+    "id": 32,
+    "question": "What is DevOps implementation?",
+    "answer": "DevOps involves automating development workflows, continuous integration/deployment, infrastructure as code, monitoring, and ensuring smooth collaboration between development and operations teams.",
+    "category": "DevOps"
+  },
+  {
+    "id": 33,
+    "question": "Can you develop IoT applications?",
+    "answer": "Yes, we develop Internet of Things (IoT) applications that connect and control smart devices, sensors, and systems for home automation, industrial monitoring, and smart city solutions.",
+    "category": "IoT"
+  },
+  {
+    "id": 34,
+    "question": "What is database design and optimization?",
+    "answer": "We design efficient database schemas, optimize queries, implement indexing strategies, and ensure data security and backup procedures for MySQL, PostgreSQL, MongoDB, and other databases.",
+    "category": "Database"
+  },
+  {
+    "id": 35,
+    "question": "Do you provide training services?",
+    "answer": "Yes, we offer technical training for your team on new technologies, best practices, and how to maintain and update the applications we develop for you.",
+    "category": "Training"
+  },
+  {
+    "id": 36,
+    "question": "What is e-commerce development?",
+    "answer": "We build comprehensive e-commerce platforms with features like product catalogs, shopping carts, payment processing, inventory management, and admin dashboards using Shopify, WooCommerce, and custom solutions.",
+    "category": "E-commerce"
+  },
+  {
+    "id": 37,
+    "question": "How do you handle data migration?",
+    "answer": "We carefully plan and execute data migration projects, ensuring data integrity, minimal downtime, proper testing, and rollback procedures when moving between systems or platforms.",
+    "category": "Data Migration"
+  },
+  {
+    "id": 38,
+    "question": "What is machine learning integration?",
+    "answer": "We integrate machine learning models for predictive analytics, recommendation systems, image recognition, natural language processing, and automated decision-making in your applications.",
+    "category": "Machine Learning"
+  },
+  {
+    "id": 39,
+    "question": "Do you offer 24/7 support?",
+    "answer": "Yes, we provide 24/7 technical support for critical applications with different service levels including response time guarantees, escalation procedures, and dedicated support teams.",
+    "category": "Support"
+  },
+  {
+    "id": 40,
+    "question": "What is performance optimization?",
+    "answer": "We optimize application performance through code optimization, database tuning, caching strategies, CDN implementation, and infrastructure scaling to ensure fast loading times and smooth user experience.",
+    "category": "Performance"
+  },
+  {
+    "id": 41,
+    "question": "Can you integrate payment gateways?",
+    "answer": "Yes, we integrate various payment gateways including Stripe, PayPal, Razorpay, Square, and others, ensuring secure transactions and PCI compliance for your applications.",
+    "category": "Payments"
+  },
+  {
+    "id": 42,
+    "question": "What is microservices architecture?",
+    "answer": "Microservices architecture breaks applications into small, independent services that communicate via APIs, enabling better scalability, maintainability, and technology diversity.",
+    "category": "Architecture"
+  },
+  {
+    "id": 43,
+    "question": "Do you provide SEO services?",
+    "answer": "Yes, we optimize websites and web applications for search engines through technical SEO, content optimization, performance improvements, and structured data implementation.",
+    "category": "SEO"
+  },
+  {
+    "id": 44,
+    "question": "What is containerization with Docker?",
+    "answer": "We use Docker and Kubernetes for containerizing applications, ensuring consistent deployment across environments, easier scaling, and simplified development workflows.",
+    "category": "Containerization"
+  },
+  {
+    "id": 45,
+    "question": "Can you develop desktop applications?",
+    "answer": "Yes, we develop cross-platform desktop applications using Electron, .NET, Java, and native technologies for Windows, macOS, and Linux platforms.",
+    "category": "Desktop Development"
+  },
+  {
+    "id": 46,
+    "question": "What is automated testing?",
+    "answer": "We implement comprehensive automated testing including unit tests, integration tests, end-to-end tests, and performance tests to ensure application reliability and reduce manual testing effort.",
+    "category": "Testing"
+  },
+  {
+    "id": 47,
+    "question": "Do you offer social media integration?",
+    "answer": "Yes, we integrate social media platforms like Facebook, Twitter, Instagram, LinkedIn, and others for authentication, sharing, social login, and content management features.",
+    "category": "Social Integration"
+  },
+  {
+    "id": 48,
+    "question": "What is real-time application development?",
+    "answer": "We develop real-time applications using WebSockets, Socket.io, and other technologies for features like live chat, real-time notifications, collaborative editing, and live data updates.",
+    "category": "Real-time"
+  },
+  {
+    "id": 49,
+    "question": "Can you help with GDPR compliance?",
+    "answer": "Yes, we ensure GDPR compliance by implementing proper data handling, user consent management, data encryption, right to be forgotten features, and privacy policy implementation.",
+    "category": "Compliance"
+  },
+  {
+    "id": 50,
+    "question": "What is headless CMS development?",
+    "answer": "We implement headless CMS solutions like Strapi, Contentful, and Sanity that separate content management from presentation, enabling flexible content delivery across multiple platforms.",
+    "category": "CMS"
+  },
+  {
+    "id": 51,
+    "question": "Do you provide code auditing services?",
+    "answer": "Yes, we conduct comprehensive code audits to identify security vulnerabilities, performance issues, code quality problems, and provide recommendations for improvements.",
+    "category": "Code Audit"
+  },
+  {
+    "id": 52,
+    "question": "What is GraphQL implementation?",
+    "answer": "We implement GraphQL APIs that provide efficient data fetching, strong typing, real-time subscriptions, and better developer experience compared to traditional REST APIs.",
+    "category": "GraphQL"
+  },
+  {
+    "id": 53,
+    "question": "Can you develop augmented reality apps?",
+    "answer": "Yes, we develop AR applications using ARKit (iOS), ARCore (Android), and Unity for immersive experiences in gaming, retail, education, and industrial applications.",
+    "category": "AR/VR"
+  },
+  {
+    "id": 54,
+    "question": "What is serverless architecture?",
+    "answer": "We implement serverless solutions using AWS Lambda, Azure Functions, and Google Cloud Functions for cost-effective, auto-scaling applications without server management overhead.",
+    "category": "Serverless"
+  },
+  {
+    "id": 55,
+    "question": "Do you offer white-label solutions?",
+    "answer": "Yes, we provide white-label mobile apps and web platforms that you can rebrand and customize for your business or resell to your clients with your own branding.",
+    "category": "White Label"
+  },
+  {
+    "id": 56,
+    "question": "What is multi-tenant application development?",
+    "answer": "We develop multi-tenant SaaS applications where multiple customers share the same application instance while keeping their data isolated and secure.",
+    "category": "SaaS"
+  },
+  {
+    "id": 57,
+    "question": "Can you integrate video calling features?",
+    "answer": "Yes, we integrate video calling capabilities using WebRTC, Zoom SDK, Agora, and Twilio Video for telemedicine, online education, and communication applications.",
+    "category": "Video Integration"
+  },
+  {
+    "id": 58,
+    "question": "What is Progressive Web App (PWA) optimization?",
+    "answer": "We optimize PWAs for offline functionality, push notifications, app-like experience, fast loading, and installation capabilities while maintaining web accessibility.",
+    "category": "PWA"
+  },
+  {
+    "id": 59,
+    "question": "Do you provide accessibility testing?",
+    "answer": "Yes, we ensure applications meet WCAG guidelines for accessibility, including screen reader compatibility, keyboard navigation, color contrast, and assistive technology support.",
+    "category": "Accessibility"
+  },
+  {
+    "id": 60,
+    "question": "What is custom CRM development?",
+    "answer": "We develop custom Customer Relationship Management systems tailored to your business processes, including lead management, sales pipeline, customer communication, and analytics.",
+    "category": "CRM"
+  },
+  {
+    "id": 61,
+    "question": "Can you develop learning management systems?",
+    "answer": "Yes, we create comprehensive LMS platforms with course management, student tracking, assessments, video streaming, certification, and integration with educational tools.",
+    "category": "Education"
+  },
+  {
+    "id": 62,
+    "question": "What is API security implementation?",
+    "answer": "We implement robust API security using OAuth 2.0, JWT tokens, rate limiting, input validation, encryption, and monitoring to protect against various security threats.",
+    "category": "API Security"
+  },
+  {
+    "id": 63,
+    "question": "Do you offer data visualization services?",
+    "answer": "Yes, we create interactive dashboards and data visualization using D3.js, Chart.js, Tableau integration, and custom solutions to help you understand and present your data effectively.",
+    "category": "Data Visualization"
+  },
+  {
+    "id": 64,
+    "question": "What is voice assistant integration?",
+    "answer": "We integrate voice assistants like Alexa, Google Assistant, and Siri into applications, enabling voice commands, speech recognition, and hands-free interaction capabilities.",
+    "category": "Voice Integration"
+  },
+  {
+    "id": 65,
+    "question": "Can you develop booking and scheduling systems?",
+    "answer": "Yes, we create comprehensive booking systems with calendar integration, automated reminders, payment processing, resource management, and mobile-friendly interfaces.",
+    "category": "Booking Systems"
+  },
+  {
+    "id": 66,
+    "question": "What is location-based service development?",
+    "answer": "We develop location-aware applications with GPS tracking, geofencing, maps integration, location sharing, and proximity-based features for various business needs.",
+    "category": "Location Services"
+  },
+  {
+    "id": 67,
+    "question": "Do you provide disaster recovery planning?",
+    "answer": "Yes, we implement disaster recovery strategies including data backup, system redundancy, failover mechanisms, and recovery procedures to ensure business continuity.",
+    "category": "Disaster Recovery"
+  },
+  {
+    "id": 68,
+    "question": "What is custom dashboard development?",
+    "answer": "We create personalized dashboards with real-time data, interactive charts, KPI tracking, user role management, and responsive design for better business insights.",
+    "category": "Dashboards"
+  },
+  {
+    "id": 69,
+    "question": "Can you integrate inventory management systems?",
+    "answer": "Yes, we develop and integrate inventory management solutions with features like stock tracking, automated reordering, barcode scanning, and supplier management.",
+    "category": "Inventory"
+  },
+  {
+    "id": 70,
+    "question": "What is cross-platform mobile development?",
+    "answer": "We use frameworks like React Native, Flutter, and Xamarin to develop apps that run on both iOS and Android platforms with shared codebase, reducing development time and costs.",
+    "category": "Cross-Platform"
+  },
+  {
+    "id": 71,
+    "question": "Do you offer penetration testing services?",
+    "answer": "Yes, we conduct comprehensive security testing to identify vulnerabilities, perform ethical hacking, and provide detailed reports with remediation recommendations.",
+    "category": "Security Testing"
+  },
+  {
+    "id": 72,
+    "question": "What is custom workflow automation?",
+    "answer": "We design and implement automated workflows for business processes, including approval systems, task routing, notification triggers, and integration with existing tools.",
+    "category": "Automation"
+  },
+  {
+    "id": 73,
+    "question": "Can you develop forum and community platforms?",
+    "answer": "Yes, we create community platforms with user profiles, discussion forums, content moderation, gamification, private messaging, and social networking features.",
+    "category": "Community Platforms"
+  },
+  {
+    "id": 74,
+    "question": "What is omnichannel customer experience?",
+    "answer": "We develop integrated customer experience solutions that provide consistent interaction across web, mobile, social media, email, and phone channels with unified customer data.",
+    "category": "Customer Experience"
+  },
+  {
+    "id": 75,
+    "question": "Do you provide load testing services?",
+    "answer": "Yes, we conduct performance and load testing to ensure your applications can handle expected traffic, identify bottlenecks, and optimize for scalability.",
+    "category": "Load Testing"
+  },
+  {
+    "id": 76,
+    "question": "What is custom reporting system development?",
+    "answer": "We create comprehensive reporting systems with automated report generation, customizable templates, scheduled delivery, and integration with various data sources.",
+    "category": "Reporting"
+  },
+  {
+    "id": 77,
+    "question": "Can you integrate with ERP systems?",
+    "answer": "Yes, we integrate applications with ERP systems like SAP, Oracle, Microsoft Dynamics, and custom ERP solutions to ensure seamless data flow and process automation.",
+    "category": "ERP Integration"
+  },
+  {
+    "id": 78,
+    "question": "What is headless e-commerce development?",
+    "answer": "We develop headless e-commerce solutions that separate frontend presentation from backend commerce functionality, enabling faster performance and flexible customer experiences.",
+    "category": "Headless Commerce"
+  },
+  {
+    "id": 79,
+    "question": "Do you offer digital transformation consulting?",
+    "answer": "Yes, we provide comprehensive digital transformation strategy, technology roadmap planning, change management, and implementation guidance to modernize your business processes.",
+    "category": "Digital Transformation"
+  },
+  {
+    "id": 80,
+    "question": "What is custom notification system development?",
+    "answer": "We develop multi-channel notification systems supporting push notifications, email, SMS, in-app messages, and webhooks with personalization and scheduling capabilities.",
+    "category": "Notifications"
+  },
+  {
+    "id": 81,
+    "question": "Can you develop telemedicine applications?",
+    "answer": "Yes, we create HIPAA-compliant telemedicine platforms with video consultations, appointment scheduling, prescription management, and secure patient data handling.",
+    "category": "Healthcare"
+  },
+  {
+    "id": 82,
+    "question": "What is custom search engine development?",
+    "answer": "We implement advanced search functionality using Elasticsearch, Solr, and AI-powered search with features like autocomplete, faceted search, and personalized results.",
+    "category": "Search"
+  },
+  {
+    "id": 83,
+    "question": "Do you provide A/B testing implementation?",
+    "answer": "Yes, we implement A/B testing frameworks to help you optimize user experience, conversion rates, and make data-driven decisions about feature improvements.",
+    "category": "A/B Testing"
+  },
+  {
+    "id": 84,
+    "question": "What is custom authentication system development?",
+    "answer": "We develop secure authentication systems with multi-factor authentication, single sign-on (SSO), social login, password policies, and session management.",
+    "category": "Authentication"
+  },
+  {
+    "id": 85,
+    "question": "Can you integrate with accounting software?",
+    "answer": "Yes, we integrate applications with accounting systems like QuickBooks, Xero, Sage, and custom accounting solutions for automated financial data synchronization.",
+    "category": "Accounting Integration"
+  },
+  {
+    "id": 86,
+    "question": "What is custom content management development?",
+    "answer": "We create tailored content management systems with user-friendly editors, workflow management, version control, SEO optimization, and multi-site management capabilities.",
+    "category": "Content Management"
+  },
+  {
+    "id": 87,
+    "question": "Do you offer code migration services?",
+    "answer": "Yes, we migrate legacy codebases to modern technologies, ensuring functionality preservation, performance improvement, and maintainability enhancement.",
+    "category": "Code Migration"
+  },
+  {
+    "id": 88,
+    "question": "What is custom email marketing platform development?",
+    "answer": "We develop email marketing platforms with campaign management, automated sequences, A/B testing, analytics, subscriber segmentation, and deliverability optimization.",
+    "category": "Email Marketing"
+  },
+  {
+    "id": 89,
+    "question": "Can you develop financial trading applications?",
+    "answer": "Yes, we create secure trading platforms with real-time market data, order management, portfolio tracking, risk assessment, and regulatory compliance features.",
+    "category": "Fintech"
+  },
+  {
+    "id": 90,
+    "question": "What is custom project management tool development?",
+    "answer": "We develop project management solutions with task tracking, team collaboration, time management, resource allocation, reporting, and integration with popular tools.",
+    "category": "Project Management"
+  },
+  {
+    "id": 91,
+    "question": "Do you provide competitor analysis services?",
+    "answer": "Yes, we analyze competitor digital strategies, feature sets, user experience, and market positioning to help you identify opportunities and competitive advantages.",
+    "category": "Analysis"
+  },
+  {
+    "id": 92,
+    "question": "What is custom loyalty program development?",
+    "answer": "We create engaging loyalty programs with points systems, rewards management, tier-based benefits, gamification elements, and integration with existing platforms.",
+    "category": "Loyalty Programs"
+  },
+  {
+    "id": 93,
+    "question": "Can you develop virtual event platforms?",
+    "answer": "Yes, we create comprehensive virtual event solutions with live streaming, interactive sessions, networking features, exhibition halls, and attendee engagement tools.",
+    "category": "Virtual Events"
+  },
+  {
+    "id": 94,
+    "question": "What is custom HR management system development?",
+    "answer": "We develop HR systems with employee management, payroll processing, attendance tracking, performance evaluation, recruitment tools, and self-service portals.",
+    "category": "HR Systems"
+  },
+  {
+    "id": 95,
+    "question": "Do you offer technical documentation services?",
+    "answer": "Yes, we create comprehensive technical documentation including API documentation, user manuals, developer guides, and system architecture documentation.",
+    "category": "Documentation"
+  },
+  {
+    "id": 96,
+    "question": "What is custom survey and form builder development?",
+    "answer": "We develop flexible survey platforms with drag-and-drop form builders, conditional logic, data collection, analytics, and integration with popular tools.",
+    "category": "Forms"
+  },
+  {
+    "id": 97,
+    "question": "Can you develop subscription management systems?",
+    "answer": "Yes, we create subscription platforms with billing management, plan customization, payment processing, usage tracking, and customer self-service portals.",
+    "category": "Subscriptions"
+  },
+  {
+    "id": 98,
+    "question": "What is custom fleet management development?",
+    "answer": "We develop fleet management solutions with vehicle tracking, route optimization, maintenance scheduling, driver management, and fuel consumption monitoring.",
+    "category": "Fleet Management"
+  },
+  {
+    "id": 99,
+    "question": "Do you provide technical SEO audits?",
+    "answer": "Yes, we conduct comprehensive technical SEO audits covering site speed, mobile-friendliness, crawlability, indexing issues, and provide actionable improvement recommendations.",
+    "category": "SEO Audit"
+  },
+  {
+    "id": 100,
+    "question": "What is your project delivery guarantee?",
+    "answer": "We guarantee on-time project delivery with milestone-based progress tracking, regular communication, quality assurance, and post-launch support to ensure your complete satisfaction.",
+    "category": "Guarantee"
+  }
+]
