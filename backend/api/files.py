@@ -91,7 +91,7 @@ async def upload_file(
         raise HTTPException(status_code=500, detail=f"Failed to parse file: {str(e)}")
 
     # ─── Embedding and Save ───
-    match_result = await classify_documents(db)  # Pass file_path to the function
+    match_result = await classify_documents(file_path, db)  # Pass file_path to the function
     print(f"Match Result: {match_result}")
     if match_result == '-1':
         raise HTTPException(status_code=400, detail="Incorrect information provided. Cannot train model.")

@@ -24,8 +24,8 @@ def cosine_similarity(vec1, vec2):
 router = APIRouter()
 
 @router.get("/classify-documents")
-async def classify_documents(db: Session = Depends(get_db)):
-    filename = "utils/test.json"
+async def classify_documents(file_path: str, db: Session = Depends(get_db)):
+    filename = file_path
     documents = []
 
     # --- Load documents ---
