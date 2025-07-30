@@ -159,3 +159,5 @@ class AskRequest(BaseModel):
 class AskResponse(BaseModel):
     answer: str
 
+class LabelRequest(BaseModel):
+    label: str
