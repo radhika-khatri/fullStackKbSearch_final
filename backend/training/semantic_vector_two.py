@@ -2,8 +2,12 @@ from transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassifica
 from sentence_transformers import SentenceTransformer
 from pymongo import MongoClient
 from pinecone import Pinecone, ServerlessSpec
+from gensim.models import Word2Vec
 import numpy as np
 import uuid
+import nltk
+from nltk.tokenize import word_tokenize
+nltk.download("punkt")
 
 # ------------------- Load Models -------------------
 print("[🧠] Loading models...")
@@ -30,19 +34,33 @@ print("[🌐] Connecting to Pinecone...")
 
 pc = Pinecone(api_key="***")  # Replace with your actual API key
 index_name = "pdf-rag-index"
+w2v_index_name = "word2vec-review-index"
 
-if index_name not in pc.list_indexes().names():
-    print(f"[📦] Index '{index_name}' not found. Creating...")
-    pc.create_index(
-        name=index_name,
-        dimension=384,
-        metric="cosine",
-        spec=ServerlessSpec(cloud="aws", region="us-east-1")
-    )
-else:
-    print(f"[📦] Index '{index_name}' found.")
+for name, dim in [(index_name, 384), (w2v_index_name, 100)]:
+    if name not in pc.list_indexes().names():
+        print(f"[📦] Creating index '{name}'...")
+        pc.create_index(
+            name=name,
+            dimension=dim,
+            metric="cosine",
+            spec=ServerlessSpec(cloud="aws", region="us-east-1")
+        )
 
 index = pc.Index(index_name)
+w2v_index = pc.Index(w2v_index_name)
+
+# ------------------- Train Word2Vec -------------------
+print("[📖] Gathering sentences for Word2Vec training...")
+
+all_sentences = []
+for session in collection.find():
+    chat = session.get("chat", [])
+    for msg in chat:
+        tokens = word_tokenize(msg["message"].lower())
+        all_sentences.append(tokens)
+
+print("[🧠] Training Word2Vec model...")
+w2v_model = Word2Vec(sentences=all_sentences, vector_size=100, window=5, min_count=1, workers=4)
 
 # ------------------- Process Chat Sessions -------------------
 print("[🚀] Starting chat session processing...")
@@ -63,7 +81,6 @@ for session in collection.find():
         # 1. Sentiment Analysis
         chunks = [chat_text[i:i+512] for i in range(0, len(chat_text), 512)]
         sentiments = [sentiment_pipeline(chunk)[0] for chunk in chunks]
-
         avg_score = float(np.mean([s["score"] for s in sentiments]))
         overall_label = max(set(s["label"] for s in sentiments), key=[s["label"] for s in sentiments].count)
         print(f"[❤️] Sentiment: {overall_label} | Avg Score: {avg_score:.2f}")
@@ -89,19 +106,34 @@ for session in collection.find():
         )
         print("[✅] MongoDB updated.")
 
-        # 4. Pinecone Vector Indexing
-        vector_embedding = embedder.encode(summary).tolist()
-        metadata = {
+        # 4. Pinecone (SentenceTransformer)
+        pinecone_id = str(uuid.uuid4())
+        sentence_vec = embedder.encode(summary).tolist()
+        index.upsert([(pinecone_id, sentence_vec, {
             "session_id": session_id,
             "summary": summary,
             "sentiment": overall_label,
-            "sentiment_score": avg_score
-        }
-        pinecone_id = str(uuid.uuid4())
-        index.upsert([(pinecone_id, vector_embedding, metadata)])
-        print(f"[📥] Stored in Pinecone with ID: {pinecone_id}")
+            "sentiment_score": avg_score,
+            "source": "sentence-transformer"
+        })])
+        print(f"[📅] SentenceTransformer vector stored with ID: {pinecone_id}")
+
+        # 5. Pinecone (Word2Vec)
+        tokens = word_tokenize(chat_text.lower())
+        valid_vectors = [w2v_model.wv[word] for word in tokens if word in w2v_model.wv]
+        if valid_vectors:
+            w2v_vector = np.mean(valid_vectors, axis=0).tolist()
+        else:
+            w2v_vector = [0.0] * w2v_model.vector_size
+
+        w2v_id = pinecone_id + "-w2v"
+        w2v_index.upsert([(w2v_id, w2v_vector, {
+            "session_id": session_id,
+            "source": "word2vec"
+        })])
+        print(f"[📅] Word2Vec vector stored with ID: {w2v_id}")
 
     except Exception as e:
         print(f"[❌] Error in session {session_id}: {e}")
 
-print("\n[🏁] All chat sessions processed and indexed.")
+print("\n[🏋️] All chat sessions processed and indexed.")
