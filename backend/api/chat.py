@@ -42,6 +42,35 @@ tokenizer = AutoTokenizer.from_pretrained(MODEL_PATH)
 model = AutoModelForCausalLM.from_pretrained(MODEL_PATH)
 chatbot = pipeline("text-generation", model=model, tokenizer=tokenizer)
 
+# ───── Sensitive Patterns ─────
+SENSITIVE_PATTERNS = {
+    "credit_card": r"\b(?:\d[ -]*?){13,16}\b",
+    "ethereum_key": r"\b(0x)?[a-fA-F0-9]{64}\b",
+    "password_phrases": r"(my\s+password\s+is\s+\S+)",
+    "email": r"\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b",
+}
+
+def sanitize_input(text: str) -> str:
+    for label, pattern in SENSITIVE_PATTERNS.items():
+        if re.search(pattern, text, flags=re.IGNORECASE):
+            logging.warning(f"🔐 Redacted {label} from user input.")
+            text = re.sub(pattern, f"[REDACTED_{label.upper()}]", text, flags=re.IGNORECASE)
+    return text
+
+# ───── High-Risk Intent Detection ─────
+HIGH_RISK_KEYWORDS = [
+    "cancel my order", "delete my account", "show my password",
+    "what is my private key", "update payment", "reset 2fa", "transfer money"
+]
+
+def detect_high_risk_intent(text: str) -> bool:
+    text = text.lower()
+    for keyword in HIGH_RISK_KEYWORDS:
+        if keyword in text:
+            logging.warning(f"🚨 High-risk intent detected: {keyword}")
+            return True
+    return False
+
 # ───── API Models ─────
 class ChatRequest(BaseModel):
     query: str
@@ -71,8 +100,11 @@ async def chat(
 
         query = msg.message
         logger.info(f"🟢 Query: {query}")
+        if detect_high_risk_intent(query):
+            return {"reply": "🚫 For this request, please contact a human agent."}
+        sanitized_query = sanitize_input(query)
 
-        query_vector = vector_model.encode([query]).astype("float32").reshape(1, -1)
+        query_vector = vector_model.encode([sanitized_query]).astype("float32").reshape(1, -1)
         distances, indices = index.search(query_vector, k=1)
         top_context = documents[indices[0][0]]
         logger.info(f"📄 Context: {top_context[:200]}...")
@@ -83,13 +115,13 @@ async def chat(
         logger.info(f"🤖 Response: {response}")
         reply = response.split("Agent:")[-1].strip()
 
-        sentiment = analyze_sentiment(query)
-        embedding = compute_embedding(query)
+        sentiment = analyze_sentiment(sanitized_query)
+        embedding = compute_embedding(sanitized_query)
 
         save_chat_message(
             user_id=user_id,
             session_id=msg.session_id,
-            message=query,
+            message=sanitized_query,
             sender="user",
             sentiment=sentiment,
             embedding=embedding,
@@ -133,21 +165,25 @@ async def websocket_endpoint(websocket: WebSocket):
 
         while True:
             msg_text = await websocket.receive_text()
-            sentiment = analyze_sentiment(msg_text)
-            embedding = compute_embedding(msg_text)
+            if detect_high_risk_intent(msg_text):
+                await websocket.send_text("🚫 For this request, please contact a human agent.")
+                continue
+            sanitized_msgtext = sanitize_input(msg_text)
+            sentiment = analyze_sentiment(sanitized_msgtext)
+            embedding = compute_embedding(sanitized_msgtext)
 
-            query_vector = vector_model.encode([msg_text]).astype("float32").reshape(1, -1)
+            query_vector = vector_model.encode([sanitized_msgtext]).astype("float32").reshape(1, -1)
             distances, indices = index.search(query_vector, k=1)
             top_context = documents[indices[0][0]]
 
-            prompt = f"<s>Context: {top_context}\nCustomer: {msg_text}\nAgent:"
+            prompt = f"<s>Context: {top_context}\nCustomer: {sanitized_msgtext}\nAgent:"
             response = chatbot(prompt, max_length=200, do_sample=True)[0]["generated_text"]
             reply = response.split("Agent:")[-1].strip()
 
             save_chat_message(
                 user_id=user_id,
                 session_id="ws",
-                message=msg_text,
+                message=sanitized_msgtext,
                 sender="user",
                 sentiment=sentiment,
                 embedding=embedding,
