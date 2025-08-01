@@ -22,6 +22,10 @@ import logging
 
 # Optional: sentiment and embedding generators
 from utils.nlp import analyze_sentiment, compute_embedding
+from fastapi.responses import JSONResponse
+
+# Temporary session-level flag (simulate per-session)
+pending_escalations = {}
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -100,8 +104,21 @@ async def chat(
 
         query = msg.message
         logger.info(f"🟢 Query: {query}")
+        if pending_escalations.get(msg.session_id):
+            if query.strip().lower() == "yes":
+                del pending_escalations[msg.session_id]
+                return {"reply": "✅ Transferring you to a human agent... Please wait."}
+            elif query.strip().lower() == "no":
+                del pending_escalations[msg.session_id]
+        # You can log out by instructing the frontend to clear the token
+                return JSONResponse(status_code=401, content={"detail": "User declined escalation. Logging out."})
+            else:
+                return {"reply": "❓ Please reply with 'yes' or 'no'."}
+
+# 2. Detect high-risk intent
         if detect_high_risk_intent(query):
-            return {"reply": "🚫 For this request, please contact a human agent."}
+            pending_escalations[msg.session_id] = True
+            return {"reply": "🚫 This is a sensitive action. Do you want to speak to a human agent? (yes/no)"}
         sanitized_query = sanitize_input(query)
 
         query_vector = vector_model.encode([sanitized_query]).astype("float32").reshape(1, -1)
