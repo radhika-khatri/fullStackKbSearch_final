@@ -182,7 +182,21 @@ async def websocket_endpoint(websocket: WebSocket):
 
         while True:
             msg_text = await websocket.receive_text()
+
+            if pending_escalations.get(msg.session_id):
+                if query.strip().lower() == "yes":
+                    del pending_escalations[msg.session_id]
+                    return {"reply": "✅ Transferring you to a human agent... Please wait."}
+                elif query.strip().lower() == "no":
+                    del pending_escalations[msg.session_id]
+                    # You can log out by instructing the frontend to clear the token
+                    return JSONResponse(status_code=401, content={"detail": "User declined escalation. Logging out."})
+                else:
+                    return {"reply": "❓ Please reply with 'yes' or 'no'."}
+
+
             if detect_high_risk_intent(msg_text):
+                pending_escalations[msg.session_id] = True
                 await websocket.send_text("🚫 For this request, please contact a human agent.")
                 continue
             sanitized_msgtext = sanitize_input(msg_text)
