@@ -171,11 +171,18 @@ def fine_tune(model_dir=MODEL_DIR, jsonl_path=DATA_PATH):
 
     model.config.pad_token_id = tokenizer.pad_token_id
 
+    MAX_PROMPT_TOKENS = 4000  # cap prompt+response length
+
     # Tokenization function
     def tokenize(example):
         full_prompt = f"<s>{example['prompt']}\n{example['response']}</s>"
-        tokens = tokenizer(full_prompt, truncation=True, padding="max_length", max_length=512)
+        tokens = tokenizer(full_prompt, truncation=True, padding="max_length", max_length=MAX_PROMPT_TOKENS)
         tokens["labels"] = tokens["input_ids"].copy()
+
+        # Count token usage
+        used_tokens = len([tid for tid in tokenized["input_ids"] if tid != tokenizer.pad_token_id])
+        remaining_tokens = MAX_PROMPT_TOKENS - used_tokens
+        log.info(f"🧮 Example tokenized: {used_tokens} used, {remaining_tokens} remaining")
         return tokens
 
     tokenized_dataset = dataset.map(tokenize)
@@ -419,13 +426,37 @@ async def websocket_endpoint(websocket: WebSocket):
         memory = RedisChatMessageHistory(session_id=session_id, url=REDIS_URL)
         log.info("Model, tokenizer, and Redis memory initialized")
 
+        MODEL_MAX_TOKENS = 4096
+        RESPONSE_MAX_TOKENS = 150
+        CONTEXT_MAX_TOKENS = MODEL_MAX_TOKENS - RESPONSE_MAX_TOKENS
+
         while True:
             user_input = await websocket.receive_text()
             log.info(f"User message: {user_input}")
             memory.add_user_message(user_input)
 
-            history_msgs = memory.messages[-5:]
-            history_text = "\n".join([f"{m.type.upper()}: {m.content}" for m in history_msgs])
+            # Token-aware context history construction
+            history_msgs = memory.messages[::-1]  # reverse to prioritize recent messages
+            prompt_parts = []
+            total_tokens = 0
+
+            for m in history_msgs:
+                entry = f"{m.type.upper()}: {m.content}"
+                tokens = tokenizer.encode(entry, add_special_tokens=False)
+                if total_tokens + len(tokens) > CONTEXT_MAX_TOKENS:
+                    break
+                prompt_parts.insert(0, entry)
+                total_tokens += len(tokens)
+
+            user_input_tokens = tokenizer.encode(user_input, add_special_tokens=False)
+            total_tokens += len(user_input_tokens)
+
+            tokens_remaining = MODEL_MAX_TOKENS - total_tokens
+            log.info(f"🧮 Tokens used: {total_tokens} | Tokens left for response: {tokens_remaining}")
+
+            await websocket.send_text(f"[TOKENS_USED]: {total_tokens}, [TOKENS_LEFT]: {tokens_remaining}")
+
+            history_text = "\n".join(prompt_parts)
             full_prompt = f"Here is the recent chat history:\n{history_text}\n\nUser: {user_input}\nAssistant:"
             log.info("Prompt constructed")
 
@@ -454,6 +485,7 @@ async def websocket_endpoint(websocket: WebSocket):
         log.error(f"Error: {str(e)}")
         await websocket.send_text(f"[ERROR]: {str(e)}")
         await websocket.close()
+
 
 
 if __name__ == "__main__":
