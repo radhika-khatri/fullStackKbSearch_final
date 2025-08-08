@@ -6,8 +6,6 @@ from utils.auth_utils import decode_jwt_token
 import psycopg2
 from utils.recommend_products import recommend_products
 
-
-
 router = APIRouter()
 
 conn = psycopg2.connect(

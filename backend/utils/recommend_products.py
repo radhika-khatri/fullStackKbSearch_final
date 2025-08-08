@@ -19,7 +19,7 @@ def classify_device_tier(os: str, browser: str, screen_resolution: str, user_age
     premium_browsers = ["Safari", "Chrome"]
     high_resolutions = ["2560x1440", "3840x2160", "2880x1800"]
 
-    if os in high_end_os and browser in premium_browsers and screen_resolution in high_resolutions:
+    if os in high_end_os or browser in premium_browsers or screen_resolution in high_resolutions:
         return "premium"
     elif "Samsung" in user_agent or "Pixel" in user_agent:
         return "mid"
