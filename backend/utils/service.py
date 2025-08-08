@@ -1,5 +1,3 @@
-
-
 # By Radhika 
 
 from fastapi import FastAPI, File, UploadFile, Form, HTTPException

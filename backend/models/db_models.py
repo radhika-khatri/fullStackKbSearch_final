@@ -109,3 +109,15 @@ class ClassifyLabels(Base):
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(String, index=True)
     label = Column(Text)
+
+class DeviceInfo(Base):
+    __tablename__ = "device_info"
+
+    id = Column(Integer, primary_key=True, index=True)
+    user_id = Column(String, index=True)
+    ip = Column(String, index=True)
+    os = Column(String)
+    browser = Column(String)
+    user_agent = Column(String)
+    screen_resolution = Column(String)
+    timestamp = Column(DateTime, default=datetime.utcnow)

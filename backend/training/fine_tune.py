@@ -185,7 +185,7 @@ def fine_tune(model_dir=MODEL_DIR, jsonl_path=DATA_PATH):
         log.info(f"🧮 Example tokenized: {used_tokens} used, {remaining_tokens} remaining")
         return tokens
 
-    tokenized_dataset = dataset.map(tokenize)
+    tokenized_dataset = dataset.map(tokenize) 
 
     # Data collator for dynamic padding
     data_collator = DataCollatorForLanguageModeling(
