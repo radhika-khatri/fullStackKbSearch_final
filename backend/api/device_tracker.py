@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from datetime import datetime
 from utils.auth_utils import decode_jwt_token
 import psycopg2
+from utils.recommend_products import recommend_products
+
 
 
 router = APIRouter()
@@ -16,7 +18,7 @@ conn = psycopg2.connect(
 )
 cursor = conn.cursor()
 
-@app.post("/save-device-info")
+@app.post("/save_device_info")
 async def save_device_info(data: DeviceInfo, request: Request):
 
     # ─── JWT Decode ───
@@ -47,15 +49,18 @@ async def save_device_info(data: DeviceInfo, request: Request):
     return {"message": "Device info saved in PostgreSQL"}
    
 
-@app.get("/get-logs")
+@app.get("/get_logs")
 async def get_logs():
     return JSONResponse(content=device_logs)
 
 # Already existing IP endpoint
-@app.get("/get-ip")
+@app.get("/get_ip")
 async def get_ip(request: Request):
     ip_address = request.headers.get('X-Forwarded-For', request.client.host)
     if ip_address and "," in ip_address:
         ip_address = ip_address.split(",")[0].strip()
     return JSONResponse(content={"ip": ip_address})
 
+@app.get("/recommendations")
+async def get_recommendations(user_email: str, os: str, browser: str, user_agent: str, screen_resolution: str):
+    return recommend_products(user_email, os, browser, user_agent, screen_resolution)

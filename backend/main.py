@@ -11,7 +11,7 @@ from fastapi.responses import JSONResponse
 import logging
 from fastapi.staticfiles import StaticFiles
 from api import quote_parser
-from api.device_tracker import get-ip
+from api.device_tracker import get_ip, save_device_info, recommendations
 
 from database import database  # Assuming you have a database module for initialization
 
@@ -56,8 +56,9 @@ app.include_router(image_router, prefix="/api/image", tags=["Image Processing"])
 app.include_router(feedback_router, prefix="/api/feedback", tags=["Feedback"])
 app.include_router(voice_router, prefix="/api/voice", tags=["Voice Assistant"])
 app.include_router(training.router, prefix="/api/training", tags=["Training"])
-app.include_router(training.router, prefix="/api/get-ip", tags=["GET-IP"])
-app.include_router(training.router, prefix="/api/save-device-info", tags=["SAVE-DEVICE-INFO"])
+app.include_router(training.router, prefix="/api/get_ip", tags=["GET-IP"])
+app.include_router(training.router, prefix="/api/save_device_info", tags=["SAVE-DEVICE-INFO"])
+app.include_router(training.router, prefix="/api/recommendations", tags=["RECOMMENDATIONS"])
 # app.include_router(websocket.router,prefix="/", tags=["WebSocket"])
 app.include_router(whatsapp.router, prefix="/whatsapp", tags=["whatsapp Integration"])
 app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
